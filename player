@@ -1,0 +1,172 @@
+#pragma once
+#include <SFML/Graphics.hpp>
+#include<iostream>
+using namespace std;
+using namespace sf;
+
+class player
+{
+private:
+	string playerName;
+	int score;
+	int currentRow;
+	int currentColumn;
+	int lives;
+	Texture playerTexture;
+	RectangleShape shape;
+
+public:
+	player(string name, string imageName, int initialRow, int initialColumn);
+
+	void movePlayer(char direc, int arrmain[21][19], int arrempt[10]);
+
+	int getPlayerRow();
+	int getPlayerColumn();
+	int getScore();
+	void addNumberofPoints(int arra[21][19], int arrayofemp[10]);
+	void addLife();
+	void reduceLife();
+	int getNumberofLives();
+	void setPlayerRow(int R);
+	void setPlayerColumn(int C);
+	void ifEaten(int rr, int cc);
+
+	void drawPlayerOnWindow(RenderWindow& window);
+};
+
+player::player(string name, string imageName, int initialRow, int initialColumn)
+{
+	playerName = name;
+	currentRow = initialRow;
+	currentColumn = initialColumn;
+	shape.setSize(Vector2f(35, 35));
+	shape.setPosition(200 + 35 * initialColumn, 200 + 35 * initialRow);
+	playerTexture.loadFromFile(imageName);
+	shape.setTexture(&playerTexture);
+}
+void player::movePlayer(char direc, int arrmain[21][19], int arrempt[10])
+
+{
+	if ((direc == 'U') || (direc == 'u'))
+	{
+		if (arrmain[currentRow - 1][currentColumn] != -1)
+		{
+			currentRow--;
+			shape.move(0, -35);
+			//addNumberofPoints(arrmain, arrempt); call this in main after checking that the texture of the boardcell is like the texture of pallet/ power p
+		}
+	}
+
+	if ((direc == 'D') || (direc == 'd'))
+	{
+		if (arrmain[currentRow + 1][currentColumn] != -1)
+		{
+			currentRow++;
+			shape.move(0, 35);
+			//addNumberofPoints(arrmain, arrempt);
+		}
+	}
+
+	if ((direc == 'L') || (direc == 'l'))
+	{
+		if (arrmain[currentRow][currentColumn - 1] != -1)
+		{
+			currentColumn--;
+			shape.move(-35, 0);
+			//addNumberofPoints(arrmain, arrempt);
+			if ((currentRow == 9) && (currentColumn == 0)) // row/col as index start from 0
+			{
+				currentColumn = 18;
+				shape.move(0, (35 * 18));
+			}
+
+			if ((currentRow == 9) && (currentColumn == 18)) // row/col as index start from 0
+			{
+				currentColumn = 0;
+				shape.move(0, (-35 * 18));
+			}
+		}
+	}
+
+
+	if ((direc == 'R') || (direc == 'r'))
+	{
+		if (arrmain[currentRow][currentColumn + 1] != -1)
+		{
+			currentColumn++;
+			shape.move(35, 0);
+			//addNumberofPoints(arrmain, arrempt);
+			//next if is for the tunnels 
+			if ((currentRow == 9) && (currentColumn == 0)) // row/col as index start from 0
+			{
+				currentColumn = 18;
+				shape.move(0, (35 * 18));
+			}
+
+			if ((currentRow == 9) && (currentColumn == 18)) // row/col as index start from 0
+			{
+				currentColumn = 0;
+				shape.move(0, (-35 * 18));
+			}
+		}
+	}
+}
+void player::addNumberofPoints(int arra[21][19], int arrayofemp[10])
+{
+	int k = 0;
+	while (k < 10)
+	{
+		if (arra[currentRow][currentColumn] != arrayofemp[k])
+			k++;
+		else
+			return;// if its equal to any element in array means its an empty place so wont add anything and wont do anything 
+	}
+	score = score + 20;
+
+	if ((arra[currentRow][currentColumn] == 015) || (arra[currentRow][currentColumn] == 103) || (arra[currentRow][currentColumn] == 172) || (arra[currentRow][currentColumn] == 188))
+		score = score + 35;
+}
+void player::addLife()
+{
+	lives++;
+
+}
+void player::reduceLife()
+{
+	lives--;
+
+}
+void player::setPlayerRow(int R)
+{
+	currentRow = R;
+}
+void player::setPlayerColumn(int C)
+{
+	currentColumn = C;
+}
+int player::getPlayerRow()
+{
+	return currentRow;
+}
+int player::getPlayerColumn()
+{
+	return currentColumn;
+}
+int player::getScore()
+{
+	return score;
+}
+int player::getNumberofLives()
+{
+	return lives;
+}
+void player::ifEaten(int rr, int cc)
+{
+	shape.setPosition(200 + 35 * rr, 200 + 35 * cc);
+	currentRow = rr;
+	currentColumn = cc;
+}
+void player::drawPlayerOnWindow(RenderWindow& window)
+{
+	window.draw(shape);
+}
