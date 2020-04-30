@@ -1,0 +1,159 @@
+#pragma once
+#include <SFML/Graphics.hpp>
+#include<iostream>
+using namespace std;
+using namespace sf;
+
+class ghost
+{
+private:
+
+	string ghostName;
+	int ghostCurrentRow;
+	int ghostCurrentColumn;
+	Texture ghostTexture;
+	RectangleShape ghostShape;
+
+public:
+
+	ghost(string gname, string gimagename, int grow, int gcolumn);
+	void moveGhost(int arr[21][19]);
+	void drawGhostonWindow(RenderWindow window);
+	string getGhostname();
+	int getGhostRow();
+	int getGhostColumn();
+	void setGhostRow(int gR);
+	void setGhostColumn(int gC);
+	void RandomMovement(int newmove, int arr[21][19]);
+
+
+};
+
+// Main Initilization of the Ghosts
+//ghost.ghostBlinky ("Blinky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Blinky.png", 7, 8);
+//ghost.ghostPinky ("Pinky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Pinky.jpg", 8, 8);
+//ghost.ghostInky ("Inky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Inky.jpg", 8, 7);
+//ghost.ghostClyde ("Clyde", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Clyde.jpg", 8, 9);
+
+ghost::ghost(string gname, string gimagename, int grow, int gcolumn)
+{
+	ghostName = gname;
+	ghostCurrentColumn = gcolumn;
+	ghostCurrentRow = grow;
+	ghostShape.setSize(Vector2f(35, 35));
+	ghostShape.setPosition(200 + 35 * gcolumn, 200 + 35 * grow);
+	ghostTexture.loadFromFile(gimagename);
+	ghostShape.setTexture(&ghostTexture);
+}
+void ghost::RandomMovement(int newmove, int arr[21][19])
+{
+	if (newmove == 1)
+	{
+		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
+		{
+			ghostCurrentColumn--;
+			ghostShape.move(-35, 0);
+		}
+	}
+	if (newmove == 2)
+	{
+		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
+		{
+			ghostCurrentColumn++;
+			ghostShape.move(35, 0);
+		}
+	}
+	if (newmove == 3)
+	{
+		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
+		{
+			ghostCurrentRow--;
+			ghostShape.move(0, -35);
+		}
+	}
+	if (newmove == 4)
+	{
+		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
+		{
+			ghostCurrentRow++;
+			ghostShape.move(35, 0);
+		}
+	}
+}
+
+
+void ghost::moveGhost(int arr[21][19])
+{
+	srand(time(0));
+	int newmove;
+	if (ghostName == "Blinky")
+		//move to the left
+		ghostCurrentColumn--;
+	ghostShape.move(-35, 0);
+	//generate a random movement
+	newmove = (rand() % 4) + 1;
+	RandomMovement(newmove, arr);
+
+	if (ghostName == "Pinky")
+		//move upwards
+		ghostCurrentRow--;
+	ghostShape.move(0, -35);
+	//generate a random movement
+	newmove = (rand() % 4) + 1;
+	RandomMovement(newmove, arr);
+
+	if (ghostName == "Inky")
+		//move to the right
+		ghostCurrentColumn++;
+	ghostShape.move(35, 0);
+	//move upwards
+	ghostCurrentRow--;
+	ghostShape.move(0, -35);
+	//move to the right
+	ghostCurrentColumn++;
+	ghostShape.move(35, 0);
+	//generate a random movement
+	newmove = (rand() % 4) + 1;
+	RandomMovement(newmove, arr);
+
+	if (ghostName == "Clyde")
+		//move to the left
+		ghostCurrentColumn--;
+	ghostShape.move(-35, 0);
+	//upwards
+	ghostCurrentRow--;
+	ghostShape.move(0, -35);
+	//generate a random movement
+	newmove = (rand() % 4) + 1;
+	RandomMovement(newmove, arr);
+}
+
+void ghost::drawGhostonWindow(RenderWindow window)
+{
+	window.draw(ghostShape);
+}
+
+string ghost::getGhostname()
+{
+	return ghostName;
+}
+
+int ghost::getGhostRow()
+{
+	return ghostCurrentRow;
+}
+
+int ghost::getGhostColumn()
+{
+	return ghostCurrentColumn;
+}
+
+void ghost::setGhostRow(int gR)
+{
+	ghostCurrentRow = gR;
+}
+
+void ghost::setGhostColumn(int gC)
+{
+	ghostCurrentColumn = gC;
+}
