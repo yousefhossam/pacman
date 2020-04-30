@@ -1,0 +1,154 @@
+#pragma once
+
+#include <SFML/Graphics.hpp>
+#include<iostream>
+#include <fstream>
+using namespace std;
+using namespace sf;
+
+enum tile_type { pallett, powerpall, normalBlock, block };
+
+struct tile {
+	tile_type type;
+	RectangleShape Tshape;
+};
+//void board::compare_texture(tile_type type1, tile_type type2) {
+	//return type1 == type2;//
+//
+
+
+class board
+{
+
+private:
+
+	Texture blocks;
+	Texture normalBlocks;//normal black empty place
+	Texture powerPallet;
+	Texture normalPallet;
+	//Texture ghosthouse;
+public:
+	tile board1[21][19];
+	int array[21][19];
+	int arrayOfEmptyPlaces[10]; //reads places that dont have a coin 
+	board(string normalpic, string blockpic, string palletpic, string powerepalletpic);
+	tile_type getBoard1CellTexture(int roww, int coll);
+	void readArrayFromFile(string filename);
+	void setBoardTextures();// set textures after filling array[][] by reading from file//Will be called from main as soon as board is created
+	void textureAfterPalyerMoves(int playerroww, int playercolumnn);
+	void drawBoardonWindow(RenderWindow& window);
+
+
+};
+
+board::board(string normalpic, string blockpic, string palletpic, string powerepalletpic)
+{
+	for (int i = 0; i < 21; i++)
+		for (int j = 0; j < 19; j++)
+		{
+			board1[i][j].Tshape.setPosition(200 + 35 * j, 200 + 35 * i);
+			board1[i][j].Tshape.setSize(Vector2f(35, 35));
+		}
+
+
+	blocks.loadFromFile(blockpic);
+	normalBlocks.loadFromFile(normalpic);
+	powerPallet.loadFromFile(powerepalletpic);
+	normalPallet.loadFromFile(palletpic);
+
+
+	//int array[21][19];
+	//int arrayOfEmptyPlaces[10];
+
+}
+
+
+
+
+void board::readArrayFromFile(string filename)
+{
+	ifstream fileRead;
+	fileRead.open("Board.txt");
+	if (fileRead.is_open())
+	{
+		while (!fileRead.eof())
+		{
+			for (int i = 0; i < 21; i++)
+				for (int j = 0; j < 19; j++)
+					fileRead >> array[i][j];
+
+			for (int i = 0; i < 10; i++)
+				fileRead >> arrayOfEmptyPlaces[i];
+		}
+
+	}
+	fileRead.close();
+}
+void board::setBoardTextures() // this sets textures to every block you stillneed to design one that is called that makes the coin disappear and changes the texture ans the one you will still create will be called from MAin 
+{
+	for (int i = 0; i < 21; i++)
+		for (int j = 0; j < 19; j++)
+			if ((array[i][j] == -01) || (array[i][j] == -03))
+
+
+			{
+				board1[i][j].Tshape.setTexture(&blocks);
+				board1[i][j].type = block;
+			}
+
+	//else if (array[i][j] == -03)
+	//	board1[i][j].setTexture(&ghosthouse);
+			else
+			{
+				board1[i][j].Tshape.setTexture(&normalBlocks);
+				board1[i][j].type = normalBlock;
+			}
+
+	int h = 0;
+	for (int i = 0; i < 21; i++)
+		for (int j = 0; j < 19; j++)
+		{
+			while ((h != 10) && (array[i][j] != arrayOfEmptyPlaces[h]))
+			{
+				h++;
+				if (h == 10)
+				{
+					board1[i][j].Tshape.setTexture(&normalPallet);
+					board1[i][j].type = pallett;
+				}
+			}
+
+		}
+
+	for (int i = 0; i < 21; i++)
+		for (int j = 0; j < 19; j++)
+			if ((array[i][j] == 015) || (array[i][j] == 103) || (array[i][j] == 172) || (array[i][j] == 188))
+			{
+				board1[i][j].Tshape.setTexture(&powerPallet);
+				board1[i][j].type = powerpall;
+			}
+
+}
+
+
+
+tile_type board::getBoard1CellTexture(int roww, int coll)
+{
+	return board1[roww][coll].type;
+	// returns the texture of the board so that we know whether or not to add points from the main.
+	//if texture is texture of pallet or power add (we need this to be able to tell whether ponts will be added or not)
+}
+void board::drawBoardonWindow(RenderWindow& window)
+
+{
+	for (int i = 0; i < 21; i++)
+		for (int j = 0; j < 19; j++)
+			window.draw(board1[i][j].Tshape);
+}
+void board::textureAfterPalyerMoves(int playerroww, int playercolumnn)
+{
+	board1[playerroww][playercolumnn].Tshape.setTexture(&normalBlocks);
+	board1[playerroww][playercolumnn].type == normalBlock;
+	// this is to be used when player moves so that all the pallets it crosses 
+	//become regular blocks instead of having texture of pallets 
+}
