@@ -12,11 +12,12 @@ private:
 	int ghostCurrentRow;
 	int ghostCurrentColumn;
 	Texture ghostTexture;
+	Texture FrenzyModeT;
 	RectangleShape ghostShape;
 
 public:
 
-	ghost(string gname, string gimagename, int grow, int gcolumn);
+	ghost(string gname, string gimagename, string frenzyblueghost,  int grow, int gcolumn);
 	void moveGhost(int arr[21][19]);
 	void drawGhostonWindow(RenderWindow& window);
 	string getGhostname();
@@ -25,8 +26,9 @@ public:
 	void setGhostRow(int gR);
 	void setGhostColumn(int gC);
 	void RandomMovement(int newmove, int arr[21][19]);
-
-
+	void frenzymodeResetPos(int ghostinitialR, int ghostinitialC);
+	void SetcolorBlueFrenzy();
+	void SetColorAFTERfrenzy(string nn, string textureofghostFile);
 };
 
 // Main Initilization of the Ghosts
@@ -35,7 +37,7 @@ public:
 //ghost.ghostInky ("Inky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Inky.jpg", 8, 7);
 //ghost.ghostClyde ("Clyde", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Clyde.jpg", 8, 9);
 
-ghost::ghost(string gname, string gimagename, int grow, int gcolumn)
+ghost::ghost(string gname, string gimagename, string frenzyblueghost, int grow, int gcolumn)
 {
 	ghostName = gname;
 	ghostCurrentColumn = gcolumn;
@@ -44,6 +46,8 @@ ghost::ghost(string gname, string gimagename, int grow, int gcolumn)
 	ghostShape.setPosition(200 + 35 * gcolumn, 200 + 35 * grow);
 	ghostTexture.loadFromFile(gimagename);
 	ghostShape.setTexture(&ghostTexture);
+	FrenzyModeT.loadFromFile(frenzyblueghost);
+
 }
 void ghost::RandomMovement(int newmove, int arr[21][19])
 {
@@ -156,4 +160,44 @@ void ghost::setGhostRow(int gR)
 void ghost::setGhostColumn(int gC)
 {
 	ghostCurrentColumn = gC;
+}
+
+void ghost::frenzymodeResetPos( int ghostinitialR, int ghostinitialC)
+{
+
+		ghostShape.setPosition(200 + 35 * ghostinitialC, 200 + 35 * ghostinitialR);
+		ghostCurrentColumn = ghostinitialC;
+		ghostCurrentRow = ghostinitialR;
+	
+
+
+}
+void ghost::SetcolorBlueFrenzy()
+{
+	ghostShape.setTexture(&FrenzyModeT);
+}
+
+void ghost::SetColorAFTERfrenzy(string nn, string textureofghostFile)
+{
+	if (nn == "Inky")
+	{
+		ghostTexture.loadFromFile(textureofghostFile);
+		ghostShape.setTexture(&ghostTexture);
+	}
+		
+	else if (nn == "Pinky")
+	{
+		ghostTexture.loadFromFile(textureofghostFile);
+		ghostShape.setTexture(&ghostTexture);
+	}
+	else if (nn == "Blinky")
+	{
+		ghostTexture.loadFromFile(textureofghostFile);
+		ghostShape.setTexture(&ghostTexture);
+	}
+	else
+	{
+		ghostTexture.loadFromFile(textureofghostFile);
+		ghostShape.setTexture(&ghostTexture);
+	}
 }
