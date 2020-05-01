@@ -90,42 +90,51 @@ void ghost::moveGhost(int arr[21][19])
 	srand(time(0));
 	int newmove;
 	if (ghostName == "Blinky")
-		//move to the left
-		ghostCurrentColumn--;
-	ghostShape.move(-35, 0);
+		if ((ghostCurrentRow == 8) && (ghostCurrentColumn == 9))	                           //move to the left
+		{
+			ghostCurrentColumn--;
+			ghostShape.move(-35, 0);
+
+		}
 	//generate a random movement
 	newmove = (rand() % 4) + 1;
 	RandomMovement(newmove, arr);
 
 	if (ghostName == "Pinky")
-		//move upwards
-		ghostCurrentRow--;
-	ghostShape.move(0, -35);
+		if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 9))	                           //move upwards
+		{
+			ghostCurrentRow--;
+			ghostShape.move(0, -35);
+		}
 	//generate a random movement
 	newmove = (rand() % 4) + 1;
 	RandomMovement(newmove, arr);
 
 	if (ghostName == "Inky")
-		//move to the right
-		ghostCurrentColumn++;
-	ghostShape.move(35, 0);
-	//move upwards
-	ghostCurrentRow--;
-	ghostShape.move(0, -35);
-	//move to the right
-	ghostCurrentColumn++;
-	ghostShape.move(35, 0);
+		if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 8))			                     //move to the right
+		{
+			ghostCurrentColumn++;
+			ghostShape.move(35, 0);
+			//move upwards
+			ghostCurrentRow--;
+			ghostShape.move(0, -35);
+			//move to the right
+			ghostCurrentColumn++;
+			ghostShape.move(35, 0);
+		}
 	//generate a random movement
 	newmove = (rand() % 4) + 1;
 	RandomMovement(newmove, arr);
 
 	if (ghostName == "Clyde")
-		//move to the left
-		ghostCurrentColumn--;
-	ghostShape.move(-35, 0);
-	//upwards
-	ghostCurrentRow--;
-	ghostShape.move(0, -35);
+		if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 10))	//move to the left
+		{
+			ghostCurrentColumn--;
+			ghostShape.move(-35, 0);
+			//upwards
+			ghostCurrentRow--;
+			ghostShape.move(0, -35);
+		}
 	//generate a random movement
 	newmove = (rand() % 4) + 1;
 	RandomMovement(newmove, arr);
