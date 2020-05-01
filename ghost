@@ -12,12 +12,12 @@ private:
 	int ghostCurrentRow;
 	int ghostCurrentColumn;
 	Texture ghostTexture;
-	Texture FrenzyModeT;
+	
 	RectangleShape ghostShape;
 
 public:
 
-	ghost(string gname, string gimagename, string frenzyblueghost,  int grow, int gcolumn);
+	ghost(string gname, string gimagename,  int grow, int gcolumn);
 	void moveGhost(int arr[21][19]);
 	void drawGhostonWindow(RenderWindow& window);
 	string getGhostname();
@@ -27,12 +27,17 @@ public:
 	void setGhostColumn(int gC);
 	void RandomMovement(int newmove, int arr[21][19]);
 	void frenzymodeResetPos(int ghostinitialR, int ghostinitialC);
-	void SetcolorBlueFrenzy();
+	void SetcolorBlueFrenzy(string frenzyblueghost);
 	void SetColorAFTERfrenzy(string nn, string textureofghostFile);
 };
 
+// Main Initilization of the Ghosts
+//ghost.ghostBlinky ("Blinky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Blinky.png", 7, 8);
+//ghost.ghostPinky ("Pinky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Pinky.jpg", 8, 8);
+//ghost.ghostInky ("Inky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Inky.jpg", 8, 7);
+//ghost.ghostClyde ("Clyde", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Clyde.jpg", 8, 9);
 
-ghost::ghost(string gname, string gimagename, string frenzyblueghost, int grow, int gcolumn)
+ghost::ghost(string gname, string gimagename, int grow, int gcolumn)
 {
 	ghostName = gname;
 	ghostCurrentColumn = gcolumn;
@@ -41,44 +46,43 @@ ghost::ghost(string gname, string gimagename, string frenzyblueghost, int grow, 
 	ghostShape.setPosition(200 + 35 * gcolumn, 200 + 35 * grow);
 	ghostTexture.loadFromFile(gimagename);
 	ghostShape.setTexture(&ghostTexture);
-	FrenzyModeT.loadFromFile(frenzyblueghost);
+
 
 }
-
 void ghost::RandomMovement(int newmove, int arr[21][19])
 {
-    if (newmove == 1) //Left movement
-    {
-        if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01)
-        {
-            ghostCurrentColumn--;
-            ghostShape.move(-35, 0);
-        }
-    }
-    if (newmove == 2) //Right movement
-    {
-        if (arr[ghostCurrentRow][ghostCurrentColumn + 1] != -01)
-        {
-            ghostCurrentColumn++;
-            ghostShape.move(35, 0);
-        }
-    }
-    if (newmove == 3) //Up movement
-    {
-        if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
-        {
-            ghostCurrentRow--;
-            ghostShape.move(0, -35);
-        }
-    }
-    if (newmove == 4) //Down movement
-    {
-        if (arr[ghostCurrentRow + 1][ghostCurrentColumn] != -01)
-        {
-            ghostCurrentRow++;
-            ghostShape.move(35, 0);
-        }
-    }
+	if (newmove == 1) //Left movement
+	{
+		if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01)
+		{
+			ghostCurrentColumn--;
+			ghostShape.move(-35, 0);
+		}
+	}
+	if (newmove == 2) //Right movement
+	{
+		if (arr[ghostCurrentRow][ghostCurrentColumn + 1] != -01)
+		{
+			ghostCurrentColumn++;
+			ghostShape.move(35, 0);
+		}
+	}
+	if (newmove == 3) //Up movement
+	{
+		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
+		{
+			ghostCurrentRow--;
+			ghostShape.move(0, -35);
+		}
+	}
+	if (newmove == 4) //Down movement
+	{
+		if (arr[ghostCurrentRow + 1][ghostCurrentColumn] != -01)
+		{
+			ghostCurrentRow++;
+			ghostShape.move(35, 0);
+		}
+	}
 }
 
 void ghost::moveGhost(int arr[21][19])
@@ -167,8 +171,10 @@ void ghost::frenzymodeResetPos( int ghostinitialR, int ghostinitialC)
 
 
 }
-void ghost::SetcolorBlueFrenzy()
+void ghost::SetcolorBlueFrenzy(string frenzyblueghost)
 {
+	Texture FrenzyModeT;
+	FrenzyModeT.loadFromFile(frenzyblueghost);
 	ghostShape.setTexture(&FrenzyModeT);
 }
 
