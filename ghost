@@ -18,7 +18,7 @@ public:
 
 	ghost(string gname, string gimagename, int grow, int gcolumn);
 	void moveGhost(int arr[21][19]);
-	void drawGhostonWindow(RenderWindow window);
+	void drawGhostonWindow(RenderWindow& window);
 	string getGhostname();
 	int getGhostRow();
 	int getGhostColumn();
@@ -128,7 +128,7 @@ void ghost::moveGhost(int arr[21][19])
 	RandomMovement(newmove, arr);
 }
 
-void ghost::drawGhostonWindow(RenderWindow window)
+void ghost::drawGhostonWindow(RenderWindow& window)
 {
 	window.draw(ghostShape);
 }
