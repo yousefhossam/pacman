@@ -56,9 +56,12 @@ board::board(string normalpic, string blockpic, string palletpic, string powerep
 	powerPallet.loadFromFile(powerepalletpic);
 	normalPallet.loadFromFile(palletpic);
 
+for(int i=0;i<21;i++)
+		for(int j=0;j<19;j++)
+	      array[i][j]=0;
 
-	//int array[21][19];
-	//int arrayOfEmptyPlaces[10];
+	for (int i=0; i < 10; i++)
+	arrayOfEmptyPlaces[i]=0;
 
 }
 
