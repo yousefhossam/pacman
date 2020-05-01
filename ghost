@@ -49,42 +49,42 @@ ghost::ghost(string gname, string gimagename, string frenzyblueghost, int grow, 
 	FrenzyModeT.loadFromFile(frenzyblueghost);
 
 }
+
 void ghost::RandomMovement(int newmove, int arr[21][19])
 {
-	if (newmove == 1)
-	{
-		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
-		{
-			ghostCurrentColumn--;
-			ghostShape.move(-35, 0);
-		}
-	}
-	if (newmove == 2)
-	{
-		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
-		{
-			ghostCurrentColumn++;
-			ghostShape.move(35, 0);
-		}
-	}
-	if (newmove == 3)
-	{
-		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
-		{
-			ghostCurrentRow--;
-			ghostShape.move(0, -35);
-		}
-	}
-	if (newmove == 4)
-	{
-		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
-		{
-			ghostCurrentRow++;
-			ghostShape.move(35, 0);
-		}
-	}
+    if (newmove == 1) //Left movement
+    {
+        if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01)
+        {
+            ghostCurrentColumn--;
+            ghostShape.move(-35, 0);
+        }
+    }
+    if (newmove == 2) //Right movement
+    {
+        if (arr[ghostCurrentRow][ghostCurrentColumn + 1] != -01)
+        {
+            ghostCurrentColumn++;
+            ghostShape.move(35, 0);
+        }
+    }
+    if (newmove == 3) //Up movement
+    {
+        if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
+        {
+            ghostCurrentRow--;
+            ghostShape.move(0, -35);
+        }
+    }
+    if (newmove == 4) //Down movement
+    {
+        if (arr[ghostCurrentRow + 1][ghostCurrentColumn] != -01)
+        {
+            ghostCurrentRow++;
+            ghostShape.move(35, 0);
+        }
+    }
 }
-
 
 void ghost::moveGhost(int arr[21][19])
 {
