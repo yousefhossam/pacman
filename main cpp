@@ -88,7 +88,7 @@ void main()
 						player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
 					}
 
-					if (maze.getBoard1CellTexture[player1.getPlayerRow()][player1.getPlayerColumn() == powerpall])
+					if (maze.getBoard1CellTexture(player1.getPlayerRow(),player1.getPlayerColumn()) == powerpall)
 					{
 						player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
 						Fmode.restart();
