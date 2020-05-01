@@ -22,7 +22,7 @@ void main()
 	//Texture pall, ppall;
 	//pall.loadFromFile("pallet.png");//p
 	//ppall.loadFromFile("powerP.png");// powerp
-
+	Clock slow;
 	char direction='f';
 	Event e;
 	Clock clk;
@@ -31,7 +31,7 @@ void main()
 	bool frenzy=false;
 	while (window.isOpen())
 	{
-		while (window.pollEvent(e))
+		if (window.pollEvent(e))
 		{
 			if (e.type == Event::Closed)
 				window.close();
@@ -52,10 +52,10 @@ void main()
 					direction = 'L';
 					break;
 				}//move(0,1)
-				
-			
-				}
 
+
+			}
+		}
 			ghostBlinky.moveGhost(maze.array);
 			ghostPinky.moveGhost(maze.array);
 			clydeCanmove = false;
@@ -134,7 +134,7 @@ void main()
 
 
 
-			}
+			
 		}
 		maze.drawBoardonWindow(window);
 		player1.drawPlayerOnWindow(window);
@@ -143,5 +143,36 @@ void main()
 		ghostBlinky.drawGhostonWindow(window);
 		ghostClyde.drawGhostonWindow(window);
 		window.display();
+
+		slow.restart();
+		while (slow.getElapsedTime().asSeconds() < 1)
+		{
+			if (window.pollEvent(e))
+			{
+				if (e.type == Event::Closed)
+					window.close();
+				else if (e.type == Event::KeyPressed)
+				{
+					switch (e.key.code)
+					{
+					case Keyboard::Up:
+						direction = 'U';
+						break;
+					case Keyboard::Down:
+						direction = 'D';
+						break;
+					case Keyboard::Right:
+						direction = 'R';
+						break;
+					case Keyboard::Left:
+						direction = 'L';
+						break;
+					}//move(0,1)
+
+
+				}
+			}
+
+		}
 	}
 }
