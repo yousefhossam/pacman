@@ -86,6 +86,10 @@ void main()
 		}
 		maze.drawBoardonWindow(window);
 		player1.drawPlayerOnWindow(window);
+		ghostBlinky.drawGhostonWindow(window);
+        	ghostPinky.drawGhostonWindow(window);
+       	 	ghostBlinky.drawGhostonWindow(window);
+        	ghostClyde.drawGhostonWindow(window);
 		window.display();
 	}
 }
