@@ -97,24 +97,24 @@ void main()
 							if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn())) 
 							{
 								ghostBlinky.frenzymodeResetPos(8, 9);
-								ghostBlinky.SetcolorBlueFrenzy();
+								ghostBlinky.SetcolorBlueFrenzy("Frenzy.png");
 							}
 
 							if ((ghostInky.getGhostRow() == player1.getPlayerRow()) && (ghostInky.getGhostColumn() == player1.getPlayerColumn()))
 							{
 								ghostInky.frenzymodeResetPos(9, 8);
-								ghostBlinky.SetcolorBlueFrenzy();
+								ghostBlinky.SetcolorBlueFrenzy("Frenzy.png");
 							}
 
 							if ((ghostClyde.getGhostRow() == player1.getPlayerRow()) && (ghostClyde.getGhostColumn() == player1.getPlayerColumn()))
 							{
 								ghostClyde.frenzymodeResetPos(9, 10);
-								ghostBlinky.SetcolorBlueFrenzy();
+								ghostBlinky.SetcolorBlueFrenzy("Frenzy.png");
 							}
 							if ((ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()))
 							{
 								ghostPinky.frenzymodeResetPos(9, 9);
-								ghostBlinky.SetcolorBlueFrenzy();
+								ghostBlinky.SetcolorBlueFrenzy("Frenzy.png");
 							}
 						}
 						frenzy = true;
