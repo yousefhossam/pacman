@@ -18,7 +18,7 @@ private:
 public:
 	player(string name, string imageName, int initialRow, int initialColumn);
 
-	void movePlayer(char direc, int arrmain[21][19], int arrempt[10]);
+	void movePlayer(char direc, int arrmain[21][19]);
 
 	int getPlayerRow();
 	int getPlayerColumn();
@@ -44,12 +44,12 @@ player::player(string name, string imageName, int initialRow, int initialColumn)
 	playerTexture.loadFromFile(imageName);
 	shape.setTexture(&playerTexture);
 }
-void player::movePlayer(char direc, int arrmain[21][19], int arrempt[10])
+void player::movePlayer(char direc, int arrmain[21][19])
 
 {
 	if ((direc == 'U') || (direc == 'u'))
 	{
-		if (arrmain[currentRow - 1][currentColumn] != -1)
+		if (arrmain[currentRow - 1][currentColumn] != -1 && arrmain[currentRow - 1][currentColumn] != -3)
 		{
 			currentRow--;
 			shape.move(0, -35);
@@ -59,7 +59,7 @@ void player::movePlayer(char direc, int arrmain[21][19], int arrempt[10])
 
 	if ((direc == 'D') || (direc == 'd'))
 	{
-		if (arrmain[currentRow + 1][currentColumn] != -1)
+		if (arrmain[currentRow + 1][currentColumn] != -1 && arrmain[currentRow + 1][currentColumn] != -3)
 		{
 			currentRow++;
 			shape.move(0, 35);
@@ -69,7 +69,7 @@ void player::movePlayer(char direc, int arrmain[21][19], int arrempt[10])
 
 	if ((direc == 'L') || (direc == 'l'))
 	{
-		if (arrmain[currentRow][currentColumn - 1] != -1)
+		if (arrmain[currentRow][currentColumn-1] != -1 && arrmain[currentRow][currentColumn-1] != -3)
 		{
 			currentColumn--;
 			shape.move(-35, 0);
@@ -91,7 +91,7 @@ void player::movePlayer(char direc, int arrmain[21][19], int arrempt[10])
 
 	if ((direc == 'R') || (direc == 'r'))
 	{
-		if (arrmain[currentRow][currentColumn + 1] != -1)
+		if (arrmain[currentRow][currentColumn+1] != -1 && arrmain[currentRow][currentColumn+1] != -3)
 		{
 			currentColumn++;
 			shape.move(35, 0);
@@ -123,7 +123,7 @@ void player::addNumberofPoints(int arra[21][19], int arrayofemp[10])
 	}
 	score = score + 20;
 
-	if ((arra[currentRow][currentColumn] == 015) || (arra[currentRow][currentColumn] == 103) || (arra[currentRow][currentColumn] == 172) || (arra[currentRow][currentColumn] == 188))
+	if ((arra[currentRow][currentColumn] == 15) || (arra[currentRow][currentColumn] == 102) || (arra[currentRow][currentColumn] == 173) || (arra[currentRow][currentColumn] == 189))
 		score = score + 35;
 }
 void player::addLife()
