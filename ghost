@@ -4,6 +4,7 @@
 using namespace std;
 using namespace sf;
 
+
 class ghost
 {
 private:
@@ -12,13 +13,16 @@ private:
 	int ghostCurrentRow;
 	int ghostCurrentColumn;
 	Texture ghostTexture;
-	
 	RectangleShape ghostShape;
 
-public:
 
-	ghost(string gname, string gimagename,  int grow, int gcolumn);
-	void moveGhost(int arr[21][19]);
+public:
+	bool canstart;
+	int nofmoves;
+	ghost(string gname, string gimagename, int grow, int gcolumn,bool s);
+	void moveGhost(int arr[][19]);
+	void moveGhost(char dir, tile_type t);
+	//void moveGhost(int dir, tile_type t);
 	void drawGhostonWindow(RenderWindow& window);
 	string getGhostname();
 	int getGhostRow();
@@ -36,8 +40,44 @@ public:
 //ghost.ghostPinky ("Pinky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Pinky.jpg", 8, 8);
 //ghost.ghostInky ("Inky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Inky.jpg", 8, 7);
 //ghost.ghostClyde ("Clyde", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Clyde.jpg", 8, 9);
+void ghost::moveGhost(char direc, tile_type t)
+{
+	if (!canstart)
+		return;
+	if (t == block)
+		return;
+	else
+	{
+		if (direc == 'U')
+		{
+			ghostCurrentRow--;
+			ghostShape.move(0, -35);
+		}
+		else if (direc == 'D')
+		{
+			ghostCurrentRow++;
+			ghostShape.move(0, 35);
 
-ghost::ghost(string gname, string gimagename, int grow, int gcolumn)
+		}
+
+		else if (direc == 'R')
+		{
+			ghostCurrentColumn++;
+			ghostShape.move(35, 0);
+
+		}
+
+		else if (direc == 'L')
+		{
+			ghostCurrentColumn--;
+			ghostShape.move(-35, 0);
+
+		}
+		nofmoves++;
+	}
+}
+
+ghost::ghost(string gname, string gimagename, int grow, int gcolumn,bool s)
 {
 	ghostName = gname;
 	ghostCurrentColumn = gcolumn;
@@ -46,8 +86,8 @@ ghost::ghost(string gname, string gimagename, int grow, int gcolumn)
 	ghostShape.setPosition(200 + 35 * gcolumn, 200 + 35 * grow);
 	ghostTexture.loadFromFile(gimagename);
 	ghostShape.setTexture(&ghostTexture);
-
-
+	canstart = s;
+	nofmoves = 0;
 }
 void ghost::RandomMovement(int newmove, int arr[21][19])
 {
@@ -69,7 +109,7 @@ void ghost::RandomMovement(int newmove, int arr[21][19])
 	}
 	if (newmove == 3) //Up movement
 	{
-		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
+		if (arr[ghostCurrentRow- 1][ghostCurrentColumn] != -01)
 		{
 			ghostCurrentRow--;
 			ghostShape.move(0, -35);
@@ -77,7 +117,7 @@ void ghost::RandomMovement(int newmove, int arr[21][19])
 	}
 	if (newmove == 4) //Down movement
 	{
-		if (arr[ghostCurrentRow + 1][ghostCurrentColumn] != -01)
+		if (arr[ghostCurrentRow+ 1][ghostCurrentColumn] != -01)
 		{
 			ghostCurrentRow++;
 			ghostShape.move(35, 0);
@@ -87,57 +127,69 @@ void ghost::RandomMovement(int newmove, int arr[21][19])
 
 void ghost::moveGhost(int arr[21][19])
 {
-	srand(time(0));
+	srand(unsigned(time(NULL)));
 	int newmove;
 	if (ghostName == "Blinky")
-		if ((ghostCurrentRow == 8) && (ghostCurrentColumn == 9))	                           //move to the left
-		{
-			ghostCurrentColumn--;
-			ghostShape.move(-35, 0);
 
+		if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01 )
+		{
+			if ((ghostCurrentRow == 8) && (ghostCurrentColumn == 9))	                           //move to the left
+			{
+				ghostCurrentColumn--;
+				ghostShape.move(-35, 0);
+
+			}
+			//generate a random movement
+			newmove = (rand() % 4) + 1;
+			RandomMovement(newmove, arr);
 		}
-	//generate a random movement
-	newmove = (rand() % 4) + 1;
-	RandomMovement(newmove, arr);
 
 	if (ghostName == "Pinky")
-		if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 9))	                           //move upwards
+		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01 )
 		{
-			ghostCurrentRow--;
-			ghostShape.move(0, -35);
+			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 9))	                           //move upwards
+			{
+				ghostCurrentRow--;
+				ghostShape.move(0, -35);
+			}
+			//generate a random movement
+			newmove = (rand() % 4) + 1;
+			RandomMovement(newmove, arr);
 		}
-	//generate a random movement
-	newmove = (rand() % 4) + 1;
-	RandomMovement(newmove, arr);
 
 	if (ghostName == "Inky")
-		if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 8))			                     //move to the right
+		if (arr[ghostCurrentRow][ghostCurrentColumn + 1] != -01 )
 		{
-			ghostCurrentColumn++;
-			ghostShape.move(35, 0);
-			//move upwards
-			ghostCurrentRow--;
-			ghostShape.move(0, -35);
-			//move to the right
-			ghostCurrentColumn++;
-			ghostShape.move(35, 0);
+			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 8))			                     //move to the right
+			{
+				ghostCurrentColumn++;
+				ghostShape.move(35, 0);
+				//move upwards
+				ghostCurrentRow--;
+				ghostShape.move(0, -35);
+				//move to the right
+				ghostCurrentColumn++;
+				ghostShape.move(35, 0);
+			}
+			//generate a random movement
+			newmove = (rand() % 4) + 1;
+			RandomMovement(newmove, arr);
 		}
-	//generate a random movement
-	newmove = (rand() % 4) + 1;
-	RandomMovement(newmove, arr);
-
 	if (ghostName == "Clyde")
-		if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 10))	//move to the left
+		if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01)
 		{
-			ghostCurrentColumn--;
-			ghostShape.move(-35, 0);
-			//upwards
-			ghostCurrentRow--;
-			ghostShape.move(0, -35);
+			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 10))	//move to the left
+			{
+				ghostCurrentColumn--;
+				ghostShape.move(-35, 0);
+				//upwards
+				ghostCurrentRow--;
+				ghostShape.move(0, -35);
+			}
+			//generate a random movement
+			newmove = (rand() % 4) + 1;
+			RandomMovement(newmove, arr);
 		}
-	//generate a random movement
-	newmove = (rand() % 4) + 1;
-	RandomMovement(newmove, arr);
 }
 
 void ghost::drawGhostonWindow(RenderWindow& window)
@@ -170,15 +222,12 @@ void ghost::setGhostColumn(int gC)
 	ghostCurrentColumn = gC;
 }
 
-void ghost::frenzymodeResetPos( int ghostinitialR, int ghostinitialC)
+void ghost::frenzymodeResetPos(int ghostinitialR, int ghostinitialC)
 {
 
-		ghostShape.setPosition(200 + 35 * ghostinitialC, 200 + 35 * ghostinitialR);
-		ghostCurrentColumn = ghostinitialC;
-		ghostCurrentRow = ghostinitialR;
-	
-
-
+	ghostShape.setPosition(200 + 35 * ghostinitialC, 200 + 35 * ghostinitialR);
+	ghostCurrentColumn = ghostinitialC;
+	ghostCurrentRow = ghostinitialR;
 }
 void ghost::SetcolorBlueFrenzy(string frenzyblueghost)
 {
@@ -194,7 +243,7 @@ void ghost::SetColorAFTERfrenzy(string nn, string textureofghostFile)
 		ghostTexture.loadFromFile(textureofghostFile);
 		ghostShape.setTexture(&ghostTexture);
 	}
-		
+
 	else if (nn == "Pinky")
 	{
 		ghostTexture.loadFromFile(textureofghostFile);
