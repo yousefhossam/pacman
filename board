@@ -1,5 +1,4 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
 #include<iostream>
 #include <fstream>
@@ -15,8 +14,6 @@ struct tile {
 //void board::compare_texture(tile_type type1, tile_type type2) {
 	//return type1 == type2;//
 //
-
-
 class board
 {
 
@@ -49,25 +46,19 @@ board::board(string normalpic, string blockpic, string palletpic, string powerep
 			board1[i][j].Tshape.setPosition(200 + 35 * j, 200 + 35 * i);
 			board1[i][j].Tshape.setSize(Vector2f(35, 35));
 		}
-
-
 	blocks.loadFromFile(blockpic);
 	normalBlocks.loadFromFile(normalpic);
 	powerPallet.loadFromFile(powerepalletpic);
 	normalPallet.loadFromFile(palletpic);
 
-	for(int i=0;i<21;i++)
-		for(int j=0;j<19;j++)
-	      array[i][j]=0;
+	for (int i = 0; i < 21; i++)
+		for (int j = 0; j < 19; j++)
+			array[i][j] = 0;
 
-	for (int i=0; i < 10; i++)
-	arrayOfEmptyPlaces[i]=0;
+	for (int i = 0; i < 10; i++)
+		arrayOfEmptyPlaces[i] = 0;
 
 }
-
-
-
-
 void board::readArrayFromFile(string filename)
 {
 	ifstream fileRead;
@@ -100,24 +91,25 @@ void board::setBoardTextures() // this sets textures to every block you stillnee
 				board1[i][j].Tshape.setTexture(&blocks);
 				board1[i][j].type = block;
 			}
-			
-			else if((array[i][j] == 77) || (array[i][j] == 78) || (array[i][j] == 79) || (array[i][j] == 74) || (array[i][j] == 84) || (array[i][j] == 85) || (array[i][j] == 86) || (array[i][j] == 91)
-				|| (array[i][j] == 92) || (array[i][j] == 93)|| (array[i][j] == 0))
+
+			else if ((array[i][j] == 77) || (array[i][j] == 78) || (array[i][j] == 79) || (array[i][j] == 74) || (array[i][j] == 84) || (array[i][j] == 85) || (array[i][j] == 86) || (array[i][j] == 91)
+				|| (array[i][j] == 92) || (array[i][j] == 93) || (array[i][j] == 0))
 			{
-				
-			
+
+
 				board1[i][j].Tshape.setTexture(&normalBlocks);
 				board1[i][j].type = normalBlock;
-							
-			
+
+
 			}
-			else if((array[i][j] != 15) || (array[i][j] != 102) || (array[i][j] != 173) || (array[i][j] != 189)|| (array[i][j] != 0))
+
+			else if ((array[i][j] != 15) || (array[i][j] != 102) || (array[i][j] != 173) || (array[i][j] != 189) || (array[i][j] != 0))
 			{
 				board1[i][j].Tshape.setTexture(&normalPallet);
 				board1[i][j].type = pallett;
 			}
 		}
-	
+
 
 	for (int i = 0; i < 21; i++)
 		for (int j = 0; j < 19; j++)
