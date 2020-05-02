@@ -1,6 +1,8 @@
 #pragma once
+#include "board.h"
 #include <SFML/Graphics.hpp>
 #include<iostream>
+#include <sstream>
 using namespace std;
 using namespace sf;
 
@@ -17,22 +19,53 @@ private:
 
 public:
 	player(string name, string imageName, int initialRow, int initialColumn);
-
 	void movePlayer(char direc, int arrmain[21][19]);
-
+	void movePlayer(char direc, tile_type t);
 	int getPlayerRow();
 	int getPlayerColumn();
 	int getScore();
-	void addNumberofPoints(int arra[21][19], int arrayofemp[10]);
+	void addNumberofPoints(int arra[][19], int arrayofemp[]);
 	void addLife();
 	void reduceLife();
 	int getNumberofLives();
 	void setPlayerRow(int R);
 	void setPlayerColumn(int C);
 	void ifEaten(int rr, int cc);
-
 	void drawPlayerOnWindow(RenderWindow& window);
 };
+void player::movePlayer(char direc, tile_type t)
+{
+	if (t == block)
+		return;
+	else
+	{
+		if (direc == 'U')
+		{
+			currentRow--;
+			shape.move(0, -35);
+		}
+		else if (direc == 'D')
+		{
+			currentRow++;
+			shape.move(0, 35);
+
+		}
+
+		else if (direc == 'R')
+		{
+			currentColumn++;
+			shape.move(35, 0);
+
+		}
+
+		else if (direc == 'L')
+		{
+			currentColumn--;
+			shape.move(-35, 0);
+
+		}
+	}
+}
 
 player::player(string name, string imageName, int initialRow, int initialColumn)
 {
@@ -43,6 +76,8 @@ player::player(string name, string imageName, int initialRow, int initialColumn)
 	shape.setPosition(200 + 35 * initialColumn, 200 + 35 * initialRow);
 	playerTexture.loadFromFile(imageName);
 	shape.setTexture(&playerTexture);
+	score = 0;
+	lives = 3;
 }
 void player::movePlayer(char direc, int arrmain[21][19])
 
@@ -124,7 +159,9 @@ void player::addNumberofPoints(int arra[21][19], int arrayofemp[10])
 	score = score + 20;
 
 	if ((arra[currentRow][currentColumn] == 15) || (arra[currentRow][currentColumn] == 102) || (arra[currentRow][currentColumn] == 173) || (arra[currentRow][currentColumn] == 189))
+	{
 		score = score + 35;
+	}
 }
 void player::addLife()
 {
