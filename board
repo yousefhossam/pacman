@@ -102,7 +102,7 @@ void board::setBoardTextures() // this sets textures to every block you stillnee
 			}
 			
 			else if((array[i][j] == 77) || (array[i][j] == 78) || (array[i][j] == 79) || (array[i][j] == 74) || (array[i][j] == 84) || (array[i][j] == 85) || (array[i][j] == 86) || (array[i][j] == 91)
-				|| (array[i][j] == 92) || (array[i][j] == 93))
+				|| (array[i][j] == 92) || (array[i][j] == 93)|| (array[i][j] == 0))
 			{
 				
 			
@@ -111,7 +111,7 @@ void board::setBoardTextures() // this sets textures to every block you stillnee
 							
 			
 			}
-			else if((array[i][j] != 15) || (array[i][j] != 102) || (array[i][j] != 173) || (array[i][j] != 189))
+			else if((array[i][j] != 15) || (array[i][j] != 102) || (array[i][j] != 173) || (array[i][j] != 189)|| (array[i][j] != 0))
 			{
 				board1[i][j].Tshape.setTexture(&normalPallet);
 				board1[i][j].type = pallett;
@@ -147,7 +147,7 @@ void board::drawBoardonWindow(RenderWindow& window)
 void board::textureAfterPalyerMoves(int playerroww, int playercolumnn)
 {
 	board1[playerroww][playercolumnn].Tshape.setTexture(&normalBlocks);
-	board1[playerroww][playercolumnn].type == normalBlock;
+	board1[playerroww][playercolumnn].type = normalBlock;
 	// this is to be used when player moves so that all the pallets it crosses 
 	//become regular blocks instead of having texture of pallets 
 }
