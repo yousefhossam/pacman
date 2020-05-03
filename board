@@ -103,7 +103,7 @@ void board::setBoardTextures() // this sets textures to every block you stillnee
 
 			}
 
-			else if ((array[i][j] != 15) || (array[i][j] != 102) || (array[i][j] != 173) || (array[i][j] != 189) || (array[i][j] != 0))
+			else if ((array[i][j] != 15) && (array[i][j] != 102) && (array[i][j] != 173) && (array[i][j] != 189) && (array[i][j] != 0))
 			{
 				board1[i][j].Tshape.setTexture(&normalPallet);
 				board1[i][j].type = pallett;
@@ -113,7 +113,7 @@ void board::setBoardTextures() // this sets textures to every block you stillnee
 
 	for (int i = 0; i < 21; i++)
 		for (int j = 0; j < 19; j++)
-			if ((array[i][j] == 015) || (array[i][j] == 102) || (array[i][j] == 173) || (array[i][j] == 189))
+			if ((array[i][j] == 15) || (array[i][j] == 102) || (array[i][j] == 173) || (array[i][j] == 189))
 			{
 				board1[i][j].Tshape.setTexture(&powerPallet);
 				board1[i][j].type = powerpall;
