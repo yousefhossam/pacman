@@ -17,10 +17,10 @@ void main()
 	maze.readArrayFromFile("Board.txt");
 	maze.setBoardTextures();
 	player player1("pacman", "Pacman.png", 1, 1);
-	ghost ghostBlinky("Blinky", "Blinky.png", 8, 9,true);
-	ghost ghostPinky("Pinky", "Pinky.png", 9, 9,true);
-	ghost ghostInky("Inky", "Inky.png", 9, 8,false);
-	ghost ghostClyde("Clyde", "Clyde.png", 9, 10,false);
+	ghost ghostBlinky("Blinky", "Blinky.png", 8, 9, true);
+	ghost ghostPinky("Pinky", "Pinky.png", 9, 9, true);
+	ghost ghostInky("Inky", "Inky.jpg", 9, 8, false);
+	ghost ghostClyde("Clyde", "Clyde.png", 9, 10, false);
 	//Texture pall, ppall;
 	//pall.loadFromFile("pallet.png");//p
 	//ppall.loadFromFile("powerP.png");// powerp
@@ -80,7 +80,7 @@ void main()
 		}
 		if (window.pollEvent(e))
 		{
-			
+
 			if (e.type == Event::Closed)
 				window.close();
 			else if (e.type == Event::KeyPressed)
@@ -107,8 +107,8 @@ void main()
 		}
 		if (start == 0)
 		{
-			 l= "Lives = " + to_string(player1.getNumberofLives());
-				lives.setString(l);
+			l = "Lives = " + to_string(player1.getNumberofLives());
+			lives.setString(l);
 			s = "Points = " + to_string(player1.getScore());
 			score.setString(s);
 			switch (direction)
@@ -243,6 +243,8 @@ void main()
 
 			//RectangleShape r1, r2;
 			//r1.getGlobalBounds().intersects(r2.getGlobalBounds());
+			if (!frenzy) 
+			{
 				if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()) ||
 					(ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()) ||
 					(ghostInky.getGhostRow() == player1.getPlayerRow()) && (ghostInky.getGhostColumn() == player1.getPlayerColumn()) ||
@@ -251,6 +253,7 @@ void main()
 					player1.ifEaten(1, 1);
 					player1.reduceLife();
 				}
+			}
 			if ((maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == pallett))
 
 			{
@@ -261,14 +264,14 @@ void main()
 
 			if (maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == powerpall)
 			{
-				if ((maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == powerpall))
+				//if ((maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == powerpall))
 
-				{
+				//{
 					maze.textureAfterPalyerMoves(player1.getPlayerRow(), player1.getPlayerColumn());
 					player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
 					//s = "Points= " + to_string(player1.getScore());
 					//score.setString(s);
-				}
+				//}
 				//player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
 				Fmode.restart();
 				if (!frenzy)
@@ -278,39 +281,41 @@ void main()
 					ghostInky.SetcolorBlueFrenzy("Frenzy.jpg");
 					ghostClyde.SetcolorBlueFrenzy("Frenzy.jpg");
 
-					if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()))
-					{
-						ghostBlinky.frenzymodeResetPos(8, 9);
-
-					}
-
-					if ((ghostInky.getGhostRow() == player1.getPlayerRow()) && (ghostInky.getGhostColumn() == player1.getPlayerColumn()))
-					{
-						ghostInky.frenzymodeResetPos(9, 8);
-
-					}
-
-					if ((ghostClyde.getGhostRow() == player1.getPlayerRow()) && (ghostClyde.getGhostColumn() == player1.getPlayerColumn()))
-					{
-						ghostClyde.frenzymodeResetPos(9, 10);
-
-					}
-					if ((ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()))
-					{
-						ghostPinky.frenzymodeResetPos(9, 9);
-
-					}
 				}
 				frenzy = true;
 
-				if (Fmode.getElapsedTime().asSeconds() < 5)
-				{
-					frenzy = false;
-					ghostBlinky.SetColorAFTERfrenzy("Blinky", "Blinky.png");
-					ghostClyde.SetColorAFTERfrenzy("Clyde", "Clyde.png");
-					ghostInky.SetColorAFTERfrenzy("Inky", "Inky.png");
-					ghostPinky.SetColorAFTERfrenzy("Pinky", "Pinky.png");
-				}
+				
+			}
+
+			if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()))
+			{
+				ghostBlinky.frenzymodeResetPos(8, 9);
+
+			}
+
+			if ((ghostInky.getGhostRow() == player1.getPlayerRow()) && (ghostInky.getGhostColumn() == player1.getPlayerColumn()))
+			{
+				ghostInky.frenzymodeResetPos(9, 8);
+
+			}
+
+			if ((ghostClyde.getGhostRow() == player1.getPlayerRow()) && (ghostClyde.getGhostColumn() == player1.getPlayerColumn()))
+			{
+				ghostClyde.frenzymodeResetPos(9, 10);
+
+			}
+			if ((ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()))
+			{
+				ghostPinky.frenzymodeResetPos(9, 9);
+
+			}
+			if (Fmode.getElapsedTime().asSeconds() > 10)
+			{
+				frenzy = false;
+				ghostBlinky.SetColorAFTERfrenzy("Blinky", "Blinky.png");
+				ghostClyde.SetColorAFTERfrenzy("Clyde", "Clyde.png");
+				ghostInky.SetColorAFTERfrenzy("Inky", "Inky.jpg");
+				ghostPinky.SetColorAFTERfrenzy("Pinky", "Pinky.png");
 			}
 		}// start function end
 		window.clear();
@@ -354,5 +359,5 @@ void main()
 			}
 
 		}
- }
+	}
 }
