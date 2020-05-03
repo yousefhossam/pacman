@@ -232,8 +232,8 @@ void ghost::frenzymodeResetPos(int ghostinitialR, int ghostinitialC)
 void ghost::SetcolorBlueFrenzy(string frenzyblueghost)
 {
 	Texture FrenzyModeT;
-	FrenzyModeT.loadFromFile(frenzyblueghost);
-	ghostShape.setTexture(&FrenzyModeT);
+	ghostTexture.loadFromFile(frenzyblueghost);
+	ghostShape.setTexture(&ghostTexture);
 }
 
 void ghost::SetColorAFTERfrenzy(string nn, string textureofghostFile)
