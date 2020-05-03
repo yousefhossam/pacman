@@ -19,7 +19,7 @@ private:
 
 public:
 	player(string name, string imageName, int initialRow, int initialColumn);
-	void movePlayer(char direc, int arrmain[21][19]);
+	//void movePlayer(char direc, int arrmain[21][19]);
 	void movePlayer(char direc, tile_type t);
 	int getPlayerRow();
 	int getPlayerColumn();
@@ -55,6 +55,12 @@ void player::movePlayer(char direc, tile_type t)
 		{
 			currentColumn++;
 			shape.move(35, 0);
+			if ((currentRow == 9) && (currentColumn == 18)) // row/col as index start from 0
+			{
+				shape.setPosition(200 + 35 * 0, 200 + 35 * 9);
+				currentColumn = 0;
+				//shape.move(0, (-35 * 18));
+			}
 
 		}
 
@@ -62,6 +68,12 @@ void player::movePlayer(char direc, tile_type t)
 		{
 			currentColumn--;
 			shape.move(-35, 0);
+			if ((currentRow == 9) && (currentColumn == 0)) // row/col as index start from 0
+			{
+				shape.setPosition(200 + 35 * 18, 200 + 35 * 9);
+				currentColumn = 18;
+				//shape.move(0, (35 * 18));
+			}
 
 		}
 	}
@@ -79,7 +91,7 @@ player::player(string name, string imageName, int initialRow, int initialColumn)
 	score = 0;
 	lives = 3;
 }
-void player::movePlayer(char direc, int arrmain[21][19])
+/*void player::movePlayer(char direc, int arrmain[21][19])
 
 {
 	if ((direc == 'U') || (direc == 'u'))
@@ -104,19 +116,23 @@ void player::movePlayer(char direc, int arrmain[21][19])
 
 	if ((direc == 'L') || (direc == 'l'))
 	{
-		if (arrmain[currentRow][currentColumn-1] != -1 && arrmain[currentRow][currentColumn-1] != -3)
+		if (arrmain[currentRow][currentColumn-1] != -1)
 		{
 			currentColumn--;
 			shape.move(-35, 0);
 			//addNumberofPoints(arrmain, arrempt);
 			if ((currentRow == 9) && (currentColumn == 0)) // row/col as index start from 0
 			{
+				cout << "in";
+				shape.setPosition(200 + 35 * 18, 200 + 35 * 9);
 				currentColumn = 18;
 				shape.move(0, (35 * 18));
 			}
 
 			if ((currentRow == 9) && (currentColumn == 18)) // row/col as index start from 0
 			{
+				cout << "in";
+				shape.setPosition(200 + 35 * 0, 200 + 35 * 9);
 				currentColumn = 0;
 				shape.move(0, (-35 * 18));
 			}
@@ -145,9 +161,14 @@ void player::movePlayer(char direc, int arrmain[21][19])
 			}
 		}
 	}
-}
+}*/
 void player::addNumberofPoints(int arra[21][19], int arrayofemp[10])
 {
+	if ((arra[currentRow][currentColumn] == 15) || (arra[currentRow][currentColumn] == 102) || (arra[currentRow][currentColumn] == 173) || (arra[currentRow][currentColumn] == 189))
+	{
+		score = score + 50;
+		return;
+	}
 	int k = 0;
 	while (k < 10)
 	{
@@ -157,11 +178,6 @@ void player::addNumberofPoints(int arra[21][19], int arrayofemp[10])
 			return;// if its equal to any element in array means its an empty place so wont add anything and wont do anything 
 	}
 	score = score + 20;
-
-	if ((arra[currentRow][currentColumn] == 15) || (arra[currentRow][currentColumn] == 102) || (arra[currentRow][currentColumn] == 173) || (arra[currentRow][currentColumn] == 189))
-	{
-		score = score + 35;
-	}
 }
 void player::addLife()
 {
