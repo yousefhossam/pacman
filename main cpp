@@ -4,6 +4,7 @@
 #include "board.h"
 #include"player.h"
 #include "ghost.h"
+#include <string>
 using namespace std;
 using namespace sf;
 
@@ -23,20 +24,63 @@ void main()
 	//Texture pall, ppall;
 	//pall.loadFromFile("pallet.png");//p
 	//ppall.loadFromFile("powerP.png");// powerp
+	//text.setString(to_string(score));
+	Font myFont;
+	if (!myFont.loadFromFile("GROBOLD.ttf"))
+	{
+		cout << "Failed to load font";
+	}
+	Text score;
+	score.setFont(myFont);
+	score.setFillColor(sf::Color::Green);
+	score.setStyle(sf::Text::Regular);
+	//score.setString("Score");
+	score.setCharacterSize(25);
+	score.setPosition(25, 130);
+	Text lives;
+	lives.setFont(myFont);
+	lives.setFillColor(sf::Color::Green);
+	lives.setStyle(sf::Text::Regular);
+	//lives.setString("Score");
+	lives.setCharacterSize(25);
+	lives.setPosition(25, 160);
+	Text end;
+	end.setString("");
+	end.setFont(myFont);
+	end.setFillColor(sf::Color::Yellow);
+	end.setStyle(sf::Text::Regular);
+	end.setCharacterSize(120);
+	end.setPosition(300, 500);
 	Clock slow;
 	char direction = 'f';
+	int start = 0;
 	Event e;
-	//sf::Text text;
-	//int score;
-	//text.setString(to_string(score));
 	Clock clydeclk;
 	Clock Fmode;
+	string E;
+	string s;
+	string l;
 	bool clydeCanmove = false;
 	bool frenzy = false;
 	while (window.isOpen())
 	{
+		//if statement with start to draw
+		if (player1.getScore() >= 3680 || player1.getNumberofLives() < 1)
+		{
+			if (player1.getScore() >= 3680)
+			{
+				E = "You Win";
+				end.setString(E);
+			}
+			else
+			{
+				E = "You Lose";
+				end.setString(E);
+			}
+		}
 		if (window.pollEvent(e))
 		{
+			
 			if (e.type == Event::Closed)
 				window.close();
 			else if (e.type == Event::KeyPressed)
@@ -55,198 +99,220 @@ void main()
 				case Keyboard::Left:
 					direction = 'L';
 					break;
+				case Keyboard::A:
+					start = 1;
+					break;
 				}//move(0,1)
 			}
 		}
-		switch (direction)
+		if (start == 0)
 		{
-		case 'U':
-			player1.movePlayer(direction, maze.board1[player1.getPlayerRow() - 1][player1.getPlayerColumn()].type);
-			break;
-		case 'D':
-			player1.movePlayer(direction, maze.board1[player1.getPlayerRow() + 1][player1.getPlayerColumn()].type);
-			break;
-		case 'R':
-			player1.movePlayer(direction, maze.board1[player1.getPlayerRow()][player1.getPlayerColumn() + 1].type);
-			break;
-		case 'L':
-			player1.movePlayer(direction, maze.board1[player1.getPlayerRow()][player1.getPlayerColumn() - 1].type);
-			break;
-		}
-		//pinky moves
-		if (ghostPinky.nofmoves == 0)
-		{
-			ghostPinky.moveGhost('U', tile_type::normalBlock);
-
-		}
-		else if (ghostPinky.nofmoves == 1)
-		{
-			ghostPinky.moveGhost('U', tile_type::normalBlock);
-		}
-		else if (ghostPinky.nofmoves == 2)
-		{
-			ghostPinky.moveGhost('L', tile_type::normalBlock);
-		}
-		else
-		{
-			int prand = rand() % 4;
-			if (prand == 0)//up
-				ghostPinky.moveGhost('U', maze.getBoard1CellTexture(ghostPinky.getGhostRow() - 1, ghostPinky.getGhostColumn()));
-			if (prand == 1)//down
-				ghostPinky.moveGhost('D', maze.getBoard1CellTexture(ghostPinky.getGhostRow() + 1, ghostPinky.getGhostColumn()));
-			if (prand == 2)//right
-				ghostPinky.moveGhost('R', maze.getBoard1CellTexture(ghostPinky.getGhostRow(), ghostPinky.getGhostColumn() + 1));
-			if (prand == 3)//left
-				ghostPinky.moveGhost('L', maze.getBoard1CellTexture(ghostPinky.getGhostRow(), ghostPinky.getGhostColumn() - 1));
-
-		}
-		//blinky moves
-		if (ghostBlinky.nofmoves == 0)
-		{
-			ghostBlinky.moveGhost('U', tile_type::normalBlock);
-
-		}
-		else
-		{
-			int prand = rand() % 4;
-			if (prand == 0)//up
-				ghostBlinky.moveGhost('U', maze.getBoard1CellTexture(ghostBlinky.getGhostRow() - 1, ghostBlinky.getGhostColumn()));
-			if (prand == 1)//down
-				ghostBlinky.moveGhost('D', maze.getBoard1CellTexture(ghostBlinky.getGhostRow() + 1, ghostBlinky.getGhostColumn()));
-			if (prand == 2)//right
-				ghostBlinky.moveGhost('R', maze.getBoard1CellTexture(ghostBlinky.getGhostRow(), ghostBlinky.getGhostColumn() + 1));
-			if (prand == 3)//left
-				ghostBlinky.moveGhost('L', maze.getBoard1CellTexture(ghostBlinky.getGhostRow(), ghostBlinky.getGhostColumn() - 1));
-
-		}
-		//inky moves
-		if (ghostInky.nofmoves == 0)
-		{
-			ghostInky.moveGhost('R', tile_type::normalBlock);
-
-		}
-		else if (ghostInky.nofmoves == 1)
-		{
-			ghostInky.moveGhost('U', tile_type::normalBlock);
-		}
-		else if (ghostInky.nofmoves == 2)
-		{
-			ghostInky.moveGhost('U', tile_type::normalBlock);
-		}
-		else
-		{
-			int prand = rand() % 4;
-			if (prand == 0)//up
-				ghostInky.moveGhost('U', maze.getBoard1CellTexture(ghostInky.getGhostRow() - 1, ghostInky.getGhostColumn()));
-			if (prand == 1)//down
-				ghostInky.moveGhost('D', maze.getBoard1CellTexture(ghostInky.getGhostRow() + 1, ghostInky.getGhostColumn()));
-			if (prand == 2)//right
-				ghostInky.moveGhost('R', maze.getBoard1CellTexture(ghostInky.getGhostRow(), ghostInky.getGhostColumn() + 1));
-			if (prand == 3)//left
-				ghostInky.moveGhost('L', maze.getBoard1CellTexture(ghostInky.getGhostRow(), ghostInky.getGhostColumn() - 1));
-
-		}
-		//clyde moves
-		if (ghostClyde.nofmoves == 0)
-		{
-			ghostClyde.moveGhost('L', tile_type::normalBlock);
-
-		}
-		else if (ghostClyde.nofmoves == 1)
-		{
-			ghostClyde.moveGhost('U', tile_type::normalBlock);
-		}
-		else if (ghostClyde.nofmoves == 2)
-		{
-			ghostClyde.moveGhost('U', tile_type::normalBlock);
-		}
-		else
-		{
-			int prand = rand() % 4;
-			if (prand == 0)//up
-				ghostClyde.moveGhost('U', maze.getBoard1CellTexture(ghostClyde.getGhostRow() - 1, ghostClyde.getGhostColumn()));
-			if (prand == 1)//down
-				ghostClyde.moveGhost('D', maze.getBoard1CellTexture(ghostClyde.getGhostRow() + 1, ghostClyde.getGhostColumn()));
-			if (prand == 2)//right
-				ghostClyde.moveGhost('R', maze.getBoard1CellTexture(ghostClyde.getGhostRow(), ghostClyde.getGhostColumn() + 1));
-			if (prand == 3)//left
-				ghostClyde.moveGhost('L', maze.getBoard1CellTexture(ghostClyde.getGhostRow(), ghostClyde.getGhostColumn() - 1));
-
-		}
-		//ghostBlinky.moveGhost();
-
-		//ghostPinky.moveGhost();
-	//	ghostInky.moveGhost();
-	//	ghostClyde.moveGhost();
-		if (player1.getScore() >= 200 && !ghostInky.canstart)
-		{
-			ghostInky.canstart = true;
-			clydeclk.restart();
-		}
-		if ((clydeclk.getElapsedTime().asMilliseconds() >= 3000) && (ghostInky.canstart))
-			ghostClyde.canstart = true;
-		//if (direction == 'U')
-		//{
-		
-		//RectangleShape r1, r2;
-		//r1.getGlobalBounds().intersects(r2.getGlobalBounds());
-		if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()) ||
-			(ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()) ||
-			(ghostInky.getGhostRow() == player1.getPlayerRow()) && (ghostInky.getGhostColumn() == player1.getPlayerColumn()) ||
-			(ghostClyde.getGhostRow() == player1.getPlayerRow()) && (ghostClyde.getGhostColumn() == player1.getPlayerColumn()))
-		{
-			player1.ifEaten(1, 1);
-			player1.reduceLife();
-		}
-
-		if ((maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == pallett) || (maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == powerpall))
-
-		{
-			maze.textureAfterPalyerMoves(player1.getPlayerRow(), player1.getPlayerColumn());
-			player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
-			cout << "points= " << player1.getScore();
-		}
-
-		if (maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == powerpall)
-		{
-			player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
-			Fmode.restart();
-			if (!frenzy)
+			 l= "Lives = " + to_string(player1.getNumberofLives());
+				lives.setString(l);
+			s = "Points = " + to_string(player1.getScore());
+			score.setString(s);
+			switch (direction)
 			{
-				if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()))
-				{
-					ghostBlinky.frenzymodeResetPos(8, 9);
-					ghostBlinky.SetcolorBlueFrenzy("Frenzy.png");
-				}
+			case 'U':
+				player1.movePlayer(direction, maze.board1[player1.getPlayerRow() - 1][player1.getPlayerColumn()].type);
+				break;
+			case 'D':
+				player1.movePlayer(direction, maze.board1[player1.getPlayerRow() + 1][player1.getPlayerColumn()].type);
+				break;
+			case 'R':
+				player1.movePlayer(direction, maze.board1[player1.getPlayerRow()][player1.getPlayerColumn() + 1].type);
+				break;
+			case 'L':
+				player1.movePlayer(direction, maze.board1[player1.getPlayerRow()][player1.getPlayerColumn() - 1].type);
+				break;
+			}
+			//pinky moves
+			if (ghostPinky.nofmoves == 0)
+			{
+				ghostPinky.moveGhost('U', tile_type::normalBlock);
 
-				if ((ghostInky.getGhostRow() == player1.getPlayerRow()) && (ghostInky.getGhostColumn() == player1.getPlayerColumn()))
-				{
-					ghostInky.frenzymodeResetPos(9, 8);
-					ghostBlinky.SetcolorBlueFrenzy("Frenzy.png");
-				}
+			}
+			else if (ghostPinky.nofmoves == 1)
+			{
+				ghostPinky.moveGhost('U', tile_type::normalBlock);
+			}
+			else if (ghostPinky.nofmoves == 2)
+			{
+				ghostPinky.moveGhost('L', tile_type::normalBlock);
+			}
+			else
+			{
+				int prand = rand() % 4;
+				if (prand == 0)//up
+					ghostPinky.moveGhost('U', maze.getBoard1CellTexture(ghostPinky.getGhostRow() - 1, ghostPinky.getGhostColumn()));
+				if (prand == 1)//down
+					ghostPinky.moveGhost('D', maze.getBoard1CellTexture(ghostPinky.getGhostRow() + 1, ghostPinky.getGhostColumn()));
+				if (prand == 2)//right
+					ghostPinky.moveGhost('R', maze.getBoard1CellTexture(ghostPinky.getGhostRow(), ghostPinky.getGhostColumn() + 1));
+				if (prand == 3)//left
+					ghostPinky.moveGhost('L', maze.getBoard1CellTexture(ghostPinky.getGhostRow(), ghostPinky.getGhostColumn() - 1));
 
-				if ((ghostClyde.getGhostRow() == player1.getPlayerRow()) && (ghostClyde.getGhostColumn() == player1.getPlayerColumn()))
+			}
+			//blinky moves
+			if (ghostBlinky.nofmoves == 0)
+			{
+				ghostBlinky.moveGhost('U', tile_type::normalBlock);
+
+			}
+			else
+			{
+				int prand = rand() % 4;
+				if (prand == 0)//up
+					ghostBlinky.moveGhost('U', maze.getBoard1CellTexture(ghostBlinky.getGhostRow() - 1, ghostBlinky.getGhostColumn()));
+				if (prand == 1)//down
+					ghostBlinky.moveGhost('D', maze.getBoard1CellTexture(ghostBlinky.getGhostRow() + 1, ghostBlinky.getGhostColumn()));
+				if (prand == 2)//right
+					ghostBlinky.moveGhost('R', maze.getBoard1CellTexture(ghostBlinky.getGhostRow(), ghostBlinky.getGhostColumn() + 1));
+				if (prand == 3)//left
+					ghostBlinky.moveGhost('L', maze.getBoard1CellTexture(ghostBlinky.getGhostRow(), ghostBlinky.getGhostColumn() - 1));
+
+			}
+			//inky moves
+			if (ghostInky.nofmoves == 0)
+			{
+				ghostInky.moveGhost('R', tile_type::normalBlock);
+
+			}
+			else if (ghostInky.nofmoves == 1)
+			{
+				ghostInky.moveGhost('U', tile_type::normalBlock);
+			}
+			else if (ghostInky.nofmoves == 2)
+			{
+				ghostInky.moveGhost('U', tile_type::normalBlock);
+			}
+			else
+			{
+				int prand = rand() % 4;
+				if (prand == 0)//up
+					ghostInky.moveGhost('U', maze.getBoard1CellTexture(ghostInky.getGhostRow() - 1, ghostInky.getGhostColumn()));
+				if (prand == 1)//down
+					ghostInky.moveGhost('D', maze.getBoard1CellTexture(ghostInky.getGhostRow() + 1, ghostInky.getGhostColumn()));
+				if (prand == 2)//right
+					ghostInky.moveGhost('R', maze.getBoard1CellTexture(ghostInky.getGhostRow(), ghostInky.getGhostColumn() + 1));
+				if (prand == 3)//left
+					ghostInky.moveGhost('L', maze.getBoard1CellTexture(ghostInky.getGhostRow(), ghostInky.getGhostColumn() - 1));
+
+			}
+			//clyde moves
+			if (ghostClyde.nofmoves == 0)
+			{
+				ghostClyde.moveGhost('L', tile_type::normalBlock);
+
+			}
+			else if (ghostClyde.nofmoves == 1)
+			{
+				ghostClyde.moveGhost('U', tile_type::normalBlock);
+			}
+			else if (ghostClyde.nofmoves == 2)
+			{
+				ghostClyde.moveGhost('U', tile_type::normalBlock);
+			}
+			else
+			{
+				int prand = rand() % 4;
+				if (prand == 0)//up
+					ghostClyde.moveGhost('U', maze.getBoard1CellTexture(ghostClyde.getGhostRow() - 1, ghostClyde.getGhostColumn()));
+				if (prand == 1)//down
+					ghostClyde.moveGhost('D', maze.getBoard1CellTexture(ghostClyde.getGhostRow() + 1, ghostClyde.getGhostColumn()));
+				if (prand == 2)//right
+					ghostClyde.moveGhost('R', maze.getBoard1CellTexture(ghostClyde.getGhostRow(), ghostClyde.getGhostColumn() + 1));
+				if (prand == 3)//left
+					ghostClyde.moveGhost('L', maze.getBoard1CellTexture(ghostClyde.getGhostRow(), ghostClyde.getGhostColumn() - 1));
+
+			}
+			//ghostBlinky.moveGhost();
+
+			//ghostPinky.moveGhost();
+		//	ghostInky.moveGhost();
+		//	ghostClyde.moveGhost();
+			if (player1.getScore() >= 200 && !ghostInky.canstart)
+			{
+				ghostInky.canstart = true;
+				clydeclk.restart();
+			}
+			if ((clydeclk.getElapsedTime().asMilliseconds() >= 3000) && (ghostInky.canstart))
+				ghostClyde.canstart = true;
+			//if (direction == 'U')
+			//{
+
+			//RectangleShape r1, r2;
+			//r1.getGlobalBounds().intersects(r2.getGlobalBounds());
+				if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()) ||
+					(ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()) ||
+					(ghostInky.getGhostRow() == player1.getPlayerRow()) && (ghostInky.getGhostColumn() == player1.getPlayerColumn()) ||
+					(ghostClyde.getGhostRow() == player1.getPlayerRow()) && (ghostClyde.getGhostColumn() == player1.getPlayerColumn()))//problem with frenzy
 				{
-					ghostClyde.frenzymodeResetPos(9, 10);
-					ghostBlinky.SetcolorBlueFrenzy("Frenzy.png");
+					player1.ifEaten(1, 1);
+					player1.reduceLife();
 				}
-				if ((ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()))
+			if ((maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == pallett))
+
+			{
+				maze.textureAfterPalyerMoves(player1.getPlayerRow(), player1.getPlayerColumn());
+				player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
+				//cout << "points= " << player1.getScore();
+			}
+
+			if (maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == powerpall)
+			{
+				if ((maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == powerpall))
+
 				{
-					ghostPinky.frenzymodeResetPos(9, 9);
-					ghostBlinky.SetcolorBlueFrenzy("Frenzy.png");
+					maze.textureAfterPalyerMoves(player1.getPlayerRow(), player1.getPlayerColumn());
+					player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
+					//s = "Points= " + to_string(player1.getScore());
+					//score.setString(s);
+				}
+				//player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
+				Fmode.restart();
+				if (!frenzy)
+				{
+					ghostBlinky.SetcolorBlueFrenzy("Frenzy.jpg");
+					ghostPinky.SetcolorBlueFrenzy("Frenzy.jpg");
+					ghostInky.SetcolorBlueFrenzy("Frenzy.jpg");
+					ghostClyde.SetcolorBlueFrenzy("Frenzy.jpg");
+
+					if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()))
+					{
+						ghostBlinky.frenzymodeResetPos(8, 9);
+
+					}
+
+					if ((ghostInky.getGhostRow() == player1.getPlayerRow()) && (ghostInky.getGhostColumn() == player1.getPlayerColumn()))
+					{
+						ghostInky.frenzymodeResetPos(9, 8);
+
+					}
+
+					if ((ghostClyde.getGhostRow() == player1.getPlayerRow()) && (ghostClyde.getGhostColumn() == player1.getPlayerColumn()))
+					{
+						ghostClyde.frenzymodeResetPos(9, 10);
+
+					}
+					if ((ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()))
+					{
+						ghostPinky.frenzymodeResetPos(9, 9);
+
+					}
+				}
+				frenzy = true;
+
+				if (Fmode.getElapsedTime().asSeconds() < 5)
+				{
+					frenzy = false;
+					ghostBlinky.SetColorAFTERfrenzy("Blinky", "Blinky.png");
+					ghostClyde.SetColorAFTERfrenzy("Clyde", "Clyde.png");
+					ghostInky.SetColorAFTERfrenzy("Inky", "Inky.png");
+					ghostPinky.SetColorAFTERfrenzy("Pinky", "Pinky.png");
 				}
 			}
-			frenzy = true;
-
-			if (Fmode.getElapsedTime().asSeconds() < 5)
-			{
-				frenzy = false;
-				ghostBlinky.SetColorAFTERfrenzy("Blinky", "Blinky.png");
-				ghostClyde.SetColorAFTERfrenzy("Clyde", "Clyde.png");
-				ghostInky.SetColorAFTERfrenzy("Inky", "Inky.jpg");
-				ghostPinky.SetColorAFTERfrenzy("Pinky", "Pinky.png");
-			}
-		}
+		}// start function end
 		window.clear();
 		maze.drawBoardonWindow(window);
 		player1.drawPlayerOnWindow(window);
@@ -254,6 +320,9 @@ void main()
 		ghostPinky.drawGhostonWindow(window);
 		ghostInky.drawGhostonWindow(window);
 		ghostClyde.drawGhostonWindow(window);
+		window.draw(end);
+		window.draw(score);
+		window.draw(lives);
 		window.display();
 		slow.restart();
 		while (slow.getElapsedTime().asMilliseconds() < 200)
