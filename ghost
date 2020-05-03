@@ -1,262 +1,225 @@
 #pragma once
+#include "board.h"
 #include <SFML/Graphics.hpp>
 #include<iostream>
+#include <sstream>
 using namespace std;
 using namespace sf;
 
-
-class ghost
+class player
 {
 private:
-
-	string ghostName;
-	int ghostCurrentRow;
-	int ghostCurrentColumn;
-	Texture ghostTexture;
-	RectangleShape ghostShape;
-
+	string playerName;
+	int score;
+	int currentRow;
+	int currentColumn;
+	int lives;
+	Texture playerTexture;
+	RectangleShape shape;
 
 public:
-	bool canstart;
-	int nofmoves;
-	ghost(string gname, string gimagename, int grow, int gcolumn,bool s);
-	void moveGhost(int arr[][19]);
-	void moveGhost(char dir, tile_type t);
-	//void moveGhost(int dir, tile_type t);
-	void drawGhostonWindow(RenderWindow& window);
-	string getGhostname();
-	int getGhostRow();
-	int getGhostColumn();
-	void setGhostRow(int gR);
-	void setGhostColumn(int gC);
-	void RandomMovement(int newmove, int arr[21][19]);
-	void frenzymodeResetPos(int ghostinitialR, int ghostinitialC);
-	void SetcolorBlueFrenzy(string frenzyblueghost);
-	void SetColorAFTERfrenzy(string nn, string textureofghostFile);
+	player(string name, string imageName, int initialRow, int initialColumn);
+	void movePlayer(char direc, int arrmain[21][19]);
+	void movePlayer(char direc, tile_type t);
+	int getPlayerRow();
+	int getPlayerColumn();
+	int getScore();
+	void addNumberofPoints(int arra[][19], int arrayofemp[]);
+	void addLife();
+	void reduceLife();
+	int getNumberofLives();
+	void setPlayerRow(int R);
+	void setPlayerColumn(int C);
+	void ifEaten(int rr, int cc);
+	void drawPlayerOnWindow(RenderWindow& window);
 };
-
-// Main Initilization of the Ghosts
-//ghost.ghostBlinky ("Blinky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Blinky.png", 7, 8);
-//ghost.ghostPinky ("Pinky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Pinky.jpg", 8, 8);
-//ghost.ghostInky ("Inky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Inky.jpg", 8, 7);
-//ghost.ghostClyde ("Clyde", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Clyde.jpg", 8, 9);
-void ghost::moveGhost(char direc, tile_type t)
+void player::movePlayer(char direc, tile_type t)
 {
-	if (!canstart)
-		return;
 	if (t == block)
 		return;
 	else
 	{
 		if (direc == 'U')
 		{
-			ghostCurrentRow--;
-			ghostShape.move(0, -35);
+			currentRow--;
+			shape.move(0, -35);
 		}
 		else if (direc == 'D')
 		{
-			ghostCurrentRow++;
-			ghostShape.move(0, 35);
+			currentRow++;
+			shape.move(0, 35);
 
 		}
 
 		else if (direc == 'R')
 		{
-			ghostCurrentColumn++;
-			ghostShape.move(35, 0);
+			currentColumn++;
+			shape.move(35, 0);
+			if ((currentRow == 9) && (currentColumn == 18)) // row/col as index start from 0
+			{
+				shape.setPosition(200 + 35 * 0, 200 + 35 * 9);
+				currentColumn = 0;
+				//shape.move(0, (-35 * 18));
+			}
 
 		}
 
 		else if (direc == 'L')
 		{
-			ghostCurrentColumn--;
-			ghostShape.move(-35, 0);
-
-		}
-		nofmoves++;
-	}
-}
-
-ghost::ghost(string gname, string gimagename, int grow, int gcolumn,bool s)
-{
-	ghostName = gname;
-	ghostCurrentColumn = gcolumn;
-	ghostCurrentRow = grow;
-	ghostShape.setSize(Vector2f(35, 35));
-	ghostShape.setPosition(200 + 35 * gcolumn, 200 + 35 * grow);
-	ghostTexture.loadFromFile(gimagename);
-	ghostShape.setTexture(&ghostTexture);
-	canstart = s;
-	nofmoves = 0;
-}
-void ghost::RandomMovement(int newmove, int arr[21][19])
-{
-	if (newmove == 1) //Left movement
-	{
-		if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01)
-		{
-			ghostCurrentColumn--;
-			ghostShape.move(-35, 0);
-		}
-	}
-	if (newmove == 2) //Right movement
-	{
-		if (arr[ghostCurrentRow][ghostCurrentColumn + 1] != -01)
-		{
-			ghostCurrentColumn++;
-			ghostShape.move(35, 0);
-		}
-	}
-	if (newmove == 3) //Up movement
-	{
-		if (arr[ghostCurrentRow- 1][ghostCurrentColumn] != -01)
-		{
-			ghostCurrentRow--;
-			ghostShape.move(0, -35);
-		}
-	}
-	if (newmove == 4) //Down movement
-	{
-		if (arr[ghostCurrentRow+ 1][ghostCurrentColumn] != -01)
-		{
-			ghostCurrentRow++;
-			ghostShape.move(35, 0);
-		}
-	}
-}
-
-void ghost::moveGhost(int arr[21][19])
-{
-	srand(unsigned(time(NULL)));
-	int newmove;
-	if (ghostName == "Blinky")
-
-		if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01 )
-		{
-			if ((ghostCurrentRow == 8) && (ghostCurrentColumn == 9))	                           //move to the left
+			currentColumn--;
+			shape.move(-35, 0);
+			if ((currentRow == 9) && (currentColumn == 0)) // row/col as index start from 0
 			{
-				ghostCurrentColumn--;
-				ghostShape.move(-35, 0);
-
+				shape.setPosition(200 + 35 * 18, 200 + 35 * 9);
+				currentColumn = 18;
+				//shape.move(0, (35 * 18));
 			}
-			//generate a random movement
-			newmove = (rand() % 4) + 1;
-			RandomMovement(newmove, arr);
-		}
 
-	if (ghostName == "Pinky")
-		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01 )
+		}
+	}
+}
+
+player::player(string name, string imageName, int initialRow, int initialColumn)
+{
+	playerName = name;
+	currentRow = initialRow;
+	currentColumn = initialColumn;
+	shape.setSize(Vector2f(35, 35));
+	shape.setPosition(200 + 35 * initialColumn, 200 + 35 * initialRow);
+	playerTexture.loadFromFile(imageName);
+	shape.setTexture(&playerTexture);
+	score = 0;
+	lives = 3;
+}
+void player::movePlayer(char direc, int arrmain[21][19])
+
+{
+	if ((direc == 'U') || (direc == 'u'))
+	{
+		if (arrmain[currentRow - 1][currentColumn] != -1 && arrmain[currentRow - 1][currentColumn] != -3)
 		{
-			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 9))	                           //move upwards
-			{
-				ghostCurrentRow--;
-				ghostShape.move(0, -35);
-			}
-			//generate a random movement
-			newmove = (rand() % 4) + 1;
-			RandomMovement(newmove, arr);
+			currentRow--;
+			shape.move(0, -35);
+			//addNumberofPoints(arrmain, arrempt); call this in main after checking that the texture of the boardcell is like the texture of pallet/ power p
 		}
+	}
 
-	if (ghostName == "Inky")
-		if (arr[ghostCurrentRow][ghostCurrentColumn + 1] != -01 )
+	if ((direc == 'D') || (direc == 'd'))
+	{
+		if (arrmain[currentRow + 1][currentColumn] != -1 && arrmain[currentRow + 1][currentColumn] != -3)
 		{
-			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 8))			                     //move to the right
-			{
-				ghostCurrentColumn++;
-				ghostShape.move(35, 0);
-				//move upwards
-				ghostCurrentRow--;
-				ghostShape.move(0, -35);
-				//move to the right
-				ghostCurrentColumn++;
-				ghostShape.move(35, 0);
-			}
-			//generate a random movement
-			newmove = (rand() % 4) + 1;
-			RandomMovement(newmove, arr);
+			currentRow++;
+			shape.move(0, 35);
+			//addNumberofPoints(arrmain, arrempt);
 		}
-	if (ghostName == "Clyde")
-		if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01)
+	}
+
+	if ((direc == 'L') || (direc == 'l'))
+	{
+		if (arrmain[currentRow][currentColumn-1] != -1)
 		{
-			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 10))	//move to the left
+			currentColumn--;
+			shape.move(-35, 0);
+			//addNumberofPoints(arrmain, arrempt);
+			if ((currentRow == 9) && (currentColumn == 0)) // row/col as index start from 0
 			{
-				ghostCurrentColumn--;
-				ghostShape.move(-35, 0);
-				//upwards
-				ghostCurrentRow--;
-				ghostShape.move(0, -35);
+				cout << "in";
+				shape.setPosition(200 + 35 * 18, 200 + 35 * 9);
+				currentColumn = 18;
+				shape.move(0, (35 * 18));
 			}
-			//generate a random movement
-			newmove = (rand() % 4) + 1;
-			RandomMovement(newmove, arr);
+
+			if ((currentRow == 9) && (currentColumn == 18)) // row/col as index start from 0
+			{
+				cout << "in";
+				shape.setPosition(200 + 35 * 0, 200 + 35 * 9);
+				currentColumn = 0;
+				shape.move(0, (-35 * 18));
+			}
 		}
-}
-
-void ghost::drawGhostonWindow(RenderWindow& window)
-{
-	window.draw(ghostShape);
-}
-
-string ghost::getGhostname()
-{
-	return ghostName;
-}
-
-int ghost::getGhostRow()
-{
-	return ghostCurrentRow;
-}
-
-int ghost::getGhostColumn()
-{
-	return ghostCurrentColumn;
-}
-
-void ghost::setGhostRow(int gR)
-{
-	ghostCurrentRow = gR;
-}
-
-void ghost::setGhostColumn(int gC)
-{
-	ghostCurrentColumn = gC;
-}
-
-void ghost::frenzymodeResetPos(int ghostinitialR, int ghostinitialC)
-{
-
-	ghostShape.setPosition(200 + 35 * ghostinitialC, 200 + 35 * ghostinitialR);
-	ghostCurrentColumn = ghostinitialC;
-	ghostCurrentRow = ghostinitialR;
-}
-void ghost::SetcolorBlueFrenzy(string frenzyblueghost)
-{
-	Texture FrenzyModeT;
-	ghostTexture.loadFromFile(frenzyblueghost);
-	ghostShape.setTexture(&ghostTexture);
-}
-
-void ghost::SetColorAFTERfrenzy(string nn, string textureofghostFile)
-{
-	if (nn == "Inky")
-	{
-		ghostTexture.loadFromFile(textureofghostFile);
-		ghostShape.setTexture(&ghostTexture);
 	}
 
-	else if (nn == "Pinky")
+
+	if ((direc == 'R') || (direc == 'r'))
 	{
-		ghostTexture.loadFromFile(textureofghostFile);
-		ghostShape.setTexture(&ghostTexture);
+		if (arrmain[currentRow][currentColumn+1] != -1 && arrmain[currentRow][currentColumn+1] != -3)
+		{
+			currentColumn++;
+			shape.move(35, 0);
+			//addNumberofPoints(arrmain, arrempt);
+			//next if is for the tunnels 
+			if ((currentRow == 9) && (currentColumn == 0)) // row/col as index start from 0
+			{
+				currentColumn = 18;
+				shape.move(0, (35 * 18));
+			}
+
+			if ((currentRow == 9) && (currentColumn == 18)) // row/col as index start from 0
+			{
+				currentColumn = 0;
+				shape.move(0, (-35 * 18));
+			}
+		}
 	}
-	else if (nn == "Blinky")
+}
+void player::addNumberofPoints(int arra[21][19], int arrayofemp[10])
+{
+	if ((arra[currentRow][currentColumn] == 15) || (arra[currentRow][currentColumn] == 102) || (arra[currentRow][currentColumn] == 173) || (arra[currentRow][currentColumn] == 189))
 	{
-		ghostTexture.loadFromFile(textureofghostFile);
-		ghostShape.setTexture(&ghostTexture);
+		score = score + 50;
+		return;
 	}
-	else
+	int k = 0;
+	while (k < 10)
 	{
-		ghostTexture.loadFromFile(textureofghostFile);
-		ghostShape.setTexture(&ghostTexture);
+		if (arra[currentRow][currentColumn] != arrayofemp[k])
+			k++;
+		else
+			return;// if its equal to any element in array means its an empty place so wont add anything and wont do anything 
 	}
+	score = score + 20;
+}
+void player::addLife()
+{
+	lives++;
+
+}
+void player::reduceLife()
+{
+	lives--;
+
+}
+void player::setPlayerRow(int R)
+{
+	currentRow = R;
+}
+void player::setPlayerColumn(int C)
+{
+	currentColumn = C;
+}
+int player::getPlayerRow()
+{
+	return currentRow;
+}
+int player::getPlayerColumn()
+{
+	return currentColumn;
+}
+int player::getScore()
+{
+	return score;
+}
+int player::getNumberofLives()
+{
+	return lives;
+}
+void player::ifEaten(int rr, int cc)
+{
+	shape.setPosition(200 + 35 * rr, 200 + 35 * cc);
+	currentRow = rr;
+	currentColumn = cc;
+}
+void player::drawPlayerOnWindow(RenderWindow& window)
+{
+	window.draw(shape);
 }
