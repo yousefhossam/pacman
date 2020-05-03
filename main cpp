@@ -7,7 +7,6 @@
 #include <string>
 using namespace std;
 using namespace sf;
-
 void main()
 {
 	srand(unsigned(time(NULL)));
@@ -19,7 +18,7 @@ void main()
 	player player1("pacman", "Pacman.png", 1, 1);
 	ghost ghostBlinky("Blinky", "Blinky.png", 8, 9, true);
 	ghost ghostPinky("Pinky", "Pinky.png", 9, 9, true);
-	ghost ghostInky("Inky", "Inky.jpg", 9, 8, false);
+	ghost ghostInky("Inky", "Inky.png", 9, 8, false);
 	ghost ghostClyde("Clyde", "Clyde.png", 9, 10, false);
 	//Texture pall, ppall;
 	//pall.loadFromFile("pallet.png");//p
@@ -32,15 +31,15 @@ void main()
 	}
 	Text score;
 	score.setFont(myFont);
-	score.setFillColor(sf::Color::Green);
-	score.setStyle(sf::Text::Regular);
+	score.setFillColor(sf::Color::Yellow);
+	score.setStyle(sf::Text::Bold);
 	//score.setString("Score");
 	score.setCharacterSize(25);
 	score.setPosition(25, 130);
 	Text lives;
 	lives.setFont(myFont);
-	lives.setFillColor(sf::Color::Green);
-	lives.setStyle(sf::Text::Regular);
+	lives.setFillColor(sf::Color::Yellow);
+	lives.setStyle(sf::Text::Bold);
 	//lives.setString("Score");
 	lives.setCharacterSize(25);
 	lives.setPosition(25, 160);
@@ -48,7 +47,7 @@ void main()
 	end.setString("");
 	end.setFont(myFont);
 	end.setFillColor(sf::Color::Yellow);
-	end.setStyle(sf::Text::Regular);
+	end.setStyle(sf::Text::Bold);
 	end.setCharacterSize(120);
 	end.setPosition(300, 500);
 	Clock slow;
@@ -243,7 +242,7 @@ void main()
 
 			//RectangleShape r1, r2;
 			//r1.getGlobalBounds().intersects(r2.getGlobalBounds());
-			if (!frenzy) 
+			if (!frenzy)
 			{
 				if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()) ||
 					(ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()) ||
@@ -267,24 +266,24 @@ void main()
 				//if ((maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == powerpall))
 
 				//{
-					maze.textureAfterPalyerMoves(player1.getPlayerRow(), player1.getPlayerColumn());
-					player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
-					//s = "Points= " + to_string(player1.getScore());
-					//score.setString(s);
-				//}
-				//player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
+				maze.textureAfterPalyerMoves(player1.getPlayerRow(), player1.getPlayerColumn());
+				player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
+				//s = "Points= " + to_string(player1.getScore());
+				//score.setString(s);
+			//}
+			//player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
 				Fmode.restart();
 				if (!frenzy)
 				{
-					ghostBlinky.SetcolorBlueFrenzy("Frenzy.jpg");
-					ghostPinky.SetcolorBlueFrenzy("Frenzy.jpg");
-					ghostInky.SetcolorBlueFrenzy("Frenzy.jpg");
-					ghostClyde.SetcolorBlueFrenzy("Frenzy.jpg");
+					ghostBlinky.SetcolorBlueFrenzy("Frenzy.png");
+					ghostPinky.SetcolorBlueFrenzy("Frenzy.png");
+					ghostInky.SetcolorBlueFrenzy("Frenzy.png");
+					ghostClyde.SetcolorBlueFrenzy("Frenzy.png");
 
 				}
 				frenzy = true;
 
-				
+
 			}
 
 			if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()))
@@ -314,7 +313,7 @@ void main()
 				frenzy = false;
 				ghostBlinky.SetColorAFTERfrenzy("Blinky", "Blinky.png");
 				ghostClyde.SetColorAFTERfrenzy("Clyde", "Clyde.png");
-				ghostInky.SetColorAFTERfrenzy("Inky", "Inky.jpg");
+				ghostInky.SetColorAFTERfrenzy("Inky", "Inky.png");
 				ghostPinky.SetColorAFTERfrenzy("Pinky", "Pinky.png");
 			}
 		}// start function end
@@ -330,7 +329,7 @@ void main()
 		window.draw(lives);
 		window.display();
 		slow.restart();
-		while (slow.getElapsedTime().asMilliseconds() < 200)
+		while (slow.getElapsedTime().asMilliseconds() < 150)
 		{
 			if (window.pollEvent(e))
 			{
@@ -353,8 +352,6 @@ void main()
 						direction = 'L';
 						break;
 					}//move(0,1)
-
-
 				}
 			}
 
