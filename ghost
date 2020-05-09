@@ -20,7 +20,7 @@ public:
 	bool canstart;
 	int nofmoves;
 	ghost(string gname, string gimagename, int grow, int gcolumn, bool s);
-	void moveGhost(int arr[][19]);
+	//void moveGhost(int arr[][19]);
 	void moveGhost(char dir, tile_type t);
 	//void moveGhost(int dir, tile_type t);
 	void drawGhostonWindow(RenderWindow& window);
@@ -29,10 +29,11 @@ public:
 	int getGhostColumn();
 	void setGhostRow(int gR);
 	void setGhostColumn(int gC);
-	void RandomMovement(int newmove, int arr[21][19]);
+	//void RandomMovement(int newmove, int arr[21][19]);
 	void frenzymodeResetPos(int ghostinitialR, int ghostinitialC);
 	void SetcolorBlueFrenzy(string frenzyblueghost);
 	void SetColorAFTERfrenzy(string nn, string textureofghostFile);
+	void moveghostNotrandom(char direc, tile_type floor);
 };
 
 // Main Initilization of the Ghosts
@@ -88,108 +89,6 @@ ghost::ghost(string gname, string gimagename, int grow, int gcolumn, bool s)
 	ghostShape.setTexture(&ghostTexture);
 	canstart = s;
 	nofmoves = 0;
-}
-void ghost::RandomMovement(int newmove, int arr[21][19])
-{
-	if (newmove == 1) //Left movement
-	{
-		if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01)
-		{
-			ghostCurrentColumn--;
-			ghostShape.move(-35, 0);
-		}
-	}
-	if (newmove == 2) //Right movement
-	{
-		if (arr[ghostCurrentRow][ghostCurrentColumn + 1] != -01)
-		{
-			ghostCurrentColumn++;
-			ghostShape.move(35, 0);
-		}
-	}
-	if (newmove == 3) //Up movement
-	{
-		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
-		{
-			ghostCurrentRow--;
-			ghostShape.move(0, -35);
-		}
-	}
-	if (newmove == 4) //Down movement
-	{
-		if (arr[ghostCurrentRow + 1][ghostCurrentColumn] != -01)
-		{
-			ghostCurrentRow++;
-			ghostShape.move(35, 0);
-		}
-	}
-}
-
-void ghost::moveGhost(int arr[21][19])
-{
-	srand(unsigned(time(NULL)));
-	int newmove;
-	if (ghostName == "Blinky")
-
-		if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01)
-		{
-			if ((ghostCurrentRow == 8) && (ghostCurrentColumn == 9))	                           //move to the left
-			{
-				ghostCurrentColumn--;
-				ghostShape.move(-35, 0);
-
-			}
-			//generate a random movement
-			newmove = (rand() % 4) + 1;
-			RandomMovement(newmove, arr);
-		}
-
-	if (ghostName == "Pinky")
-		if (arr[ghostCurrentRow - 1][ghostCurrentColumn] != -01)
-		{
-			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 9))	                           //move upwards
-			{
-				ghostCurrentRow--;
-				ghostShape.move(0, -35);
-			}
-			//generate a random movement
-			newmove = (rand() % 4) + 1;
-			RandomMovement(newmove, arr);
-		}
-
-	if (ghostName == "Inky")
-		if (arr[ghostCurrentRow][ghostCurrentColumn + 1] != -01)
-		{
-			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 8))			                     //move to the right
-			{
-				ghostCurrentColumn++;
-				ghostShape.move(35, 0);
-				//move upwards
-				ghostCurrentRow--;
-				ghostShape.move(0, -35);
-				//move to the right
-				ghostCurrentColumn++;
-				ghostShape.move(35, 0);
-			}
-			//generate a random movement
-			newmove = (rand() % 4) + 1;
-			RandomMovement(newmove, arr);
-		}
-	if (ghostName == "Clyde")
-		if (arr[ghostCurrentRow][ghostCurrentColumn - 1] != -01)
-		{
-			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 10))	//move to the left
-			{
-				ghostCurrentColumn--;
-				ghostShape.move(-35, 0);
-				//upwards
-				ghostCurrentRow--;
-				ghostShape.move(0, -35);
-			}
-			//generate a random movement
-			newmove = (rand() % 4) + 1;
-			RandomMovement(newmove, arr);
-		}
 }
 
 void ghost::drawGhostonWindow(RenderWindow& window)
@@ -258,5 +157,52 @@ void ghost::SetColorAFTERfrenzy(string nn, string textureofghostFile)
 	{
 		ghostTexture.loadFromFile(textureofghostFile);
 		//ghostShape.setTexture(&ghostTexture);
+	}
+}
+
+void ghost::moveghostNotrandom(char direc, tile_type floor)
+{
+	if (floor == block)
+		return;
+	else
+	{
+		cout << " in ghostf ";
+		if (direc == 'U')
+		{
+			ghostCurrentRow--;
+			ghostShape.move(0, -35);
+		}
+		else if (direc == 'D')
+		{
+			ghostCurrentRow++;
+			ghostShape.move(0, 35);
+
+		}
+
+		else if (direc == 'R')
+		{
+			ghostCurrentColumn++;
+			ghostShape.move(35, 0);
+			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 18)) // row/col as index start from 0
+			{
+				ghostShape.setPosition(200 + 35 * 0, 200 + 35 * 9);
+				ghostCurrentColumn = 0;
+				//shape.move(0, (-35 * 18));
+			}
+
+		}
+
+		else if (direc == 'L')
+		{
+			ghostCurrentColumn--;
+			ghostShape.move(-35, 0);
+			if ((ghostCurrentRow == 9) && (ghostCurrentColumn == 0)) // row/col as index start from 0
+			{
+				ghostShape.setPosition(200 + 35 * 18, 200 + 35 * 9);
+				ghostCurrentColumn = 18;
+				//shape.move(0, (35 * 18));
+			}
+
+		}
 	}
 }
