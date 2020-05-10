@@ -1,10 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include<iostream>
+#include <vector>
 using namespace std;
 using namespace sf;
-
-
 class ghost
 {
 private:
@@ -14,8 +13,6 @@ private:
 	int ghostCurrentColumn;
 	Texture ghostTexture;
 	RectangleShape ghostShape;
-
-
 public:
 	bool canstart;
 	int nofmoves;
@@ -35,7 +32,6 @@ public:
 	void SetColorAFTERfrenzy(string nn, string textureofghostFile);
 	void moveghostNotrandom(char direc, tile_type floor);
 };
-
 // Main Initilization of the Ghosts
 //ghost.ghostBlinky ("Blinky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Blinky.png", 7, 8);
 //ghost.ghostPinky ("Pinky", "/Users/SalmaShoukry/Desktop/PacmanBoard/PacmanBoard/Pinky.jpg", 8, 8);
