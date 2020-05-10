@@ -10,28 +10,23 @@ using namespace std;
 using namespace sf;
 const int COUNT = 190;
 const int INFINITE = 9999;
-
 vector<vector<int>> Dijkstra(int Graph[COUNT][COUNT], int startNode);
-
 void main()
 {
 	Clock testtimer;
 	vector<vector<int>> paths;
 	int playerposition;
 	int ghostpsition;
-	srand(unsigned(time(NULL)));
 	RenderWindow window;
 	window.create(VideoMode(1000, 1000), "PacMan");
-	board maze("normalBlock.png", "Blue.jpg", "pallet.png", "powerP.png");
+	board maze("normalBlock.png", "Blue.jpg", "pallet.png", "powerP.png","Fruit.png");
 	maze.readArrayFromFile("Board.txt");
 	maze.setBoardTextures();
 	player player1("pacman", "Pacman.png", 1, 1);
 	ghost ghostBlinky("Blinky", "Blinky.png", 8, 9, true);
 	ghost ghostPinky("Pinky", "Pinky.png", 9, 9, true);
-	ghost ghostInky("Inky", "Inky.jpg", 9, 8, false);
+	ghost ghostInky("Inky", "Inky.png", 9, 8, false);
 	ghost ghostClyde("Clyde", "Clyde.png", 9, 10, false);
-	
-	//text.setString(to_string(score));
 	Font myFont;
 	if (!myFont.loadFromFile("GROBOLD.ttf"))
 	{
@@ -41,14 +36,12 @@ void main()
 	score.setFont(myFont);
 	score.setFillColor(sf::Color::Green);
 	score.setStyle(sf::Text::Regular);
-	//score.setString("Score");
 	score.setCharacterSize(25);
 	score.setPosition(25, 130);
 	Text lives;
 	lives.setFont(myFont);
 	lives.setFillColor(sf::Color::Green);
 	lives.setStyle(sf::Text::Regular);
-	//lives.setString("Score");
 	lives.setCharacterSize(25);
 	lives.setPosition(25, 160);
 	Text end;
@@ -58,7 +51,8 @@ void main()
 	end.setStyle(sf::Text::Regular);
 	end.setCharacterSize(120);
 	end.setPosition(300, 500);
-	Clock slow;
+	Clock slowPacman;
+	Clock slowGhost;
 	char direction = 'f';
 	int start = 0;
 	Event e;
@@ -88,7 +82,7 @@ void main()
 	for (int i = 0; i < 21; i++)
 		for (int j = 0; j < 19; j++)
 		{
-			if ((maze.array[i][j] != -1) && (maze.array[i][j]!= 77) && (maze.array[i][j] != 93))// make sure ur not on a block because blocks arent nodes and if ur not at the tunnels 
+			if ((maze.array[i][j] != -1) && (maze.array[i][j] != 77) && (maze.array[i][j] != 93))// make sure ur not on a block because blocks arent nodes and if ur not at the tunnels 
 			{
 				if (maze.array[i + 1][j] != -01)// check if below it is not block
 				{
@@ -112,7 +106,7 @@ void main()
 			}
 			if (maze.array[i][j] == 77)// the tunnels 
 			{
-				Graph[77][78]=1;
+				Graph[77][78] = 1;
 				Graph[77][93] = 1;
 			}
 			if (maze.array[i][j] == 93)// the tunnels 
@@ -120,41 +114,13 @@ void main()
 				Graph[93][92] = 1;
 				Graph[93][77] = 1;
 			}
-
-
-		}// ana ba2af hena ka code dik
-
-
-
-/*	vector<vector<int>> paths = Dijkstra(Graph, 0);
-	for (int i = 0; i < COUNT; i++)
-	{
-		for (int j = paths[i].size() - 1; j >= 0; j--)
-			cout << paths[i][j] << " ";
-		cout << endl;
-	}*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		}
 	while (window.isOpen())
 	{
 		//if statement with start to draw
-		if (player1.getScore() >= 3680 || player1.getNumberofLives() < 1)
+		if (player1.getScore() >= 3640 || player1.getNumberofLives() < 1)
 		{
-			if (player1.getScore() >= 3680)
+			if (player1.getScore() >= 3640)
 			{
 				E = "You Win";
 				end.setString(E);
@@ -165,7 +131,7 @@ void main()
 				end.setString(E);
 			}
 		}
-	
+
 		if (window.pollEvent(e))
 		{
 
@@ -187,7 +153,7 @@ void main()
 				case Keyboard::Left:
 					direction = 'L';
 					break;
-			
+
 				}//move(0,1)
 			}
 		}
@@ -234,17 +200,17 @@ void main()
 				paths = Dijkstra(Graph, maze.array[ghostPinky.getGhostRow()][ghostPinky.getGhostColumn()]);
 				paths[playerposition].pop_back();
 				//for (int i = 0; i < paths[playerposition].size(); i++)
-				if(!paths[playerposition].empty())
+				if (!paths[playerposition].empty())
 				{
-					
-					int temp =paths[playerposition].back();
+
+					int temp = paths[playerposition].back();
 					paths[playerposition].pop_back();
 					if (maze.array[ghostPinky.getGhostRow() - 1][ghostPinky.getGhostColumn()] == temp)
 					{
 						cout << "in up";
 						ghostPinky.moveghostNotrandom('U', tile_type::normalBlock);
 					}
-					else if (maze.array[ghostPinky.getGhostRow() + 1][ghostPinky.getGhostColumn()] ==temp)
+					else if (maze.array[ghostPinky.getGhostRow() + 1][ghostPinky.getGhostColumn()] == temp)
 					{
 						cout << "in down";
 						ghostPinky.moveghostNotrandom('D', tile_type::normalBlock);
@@ -262,20 +228,8 @@ void main()
 					//testtimer.restart();
 					while (testtimer.getElapsedTime().asMilliseconds() < 400)
 					{
-
 					}
-
 				}
-				/*int prand = rand() % 4;
-				if (prand == 0)//up
-					ghostPinky.moveGhost('U', maze.getBoard1CellTexture(ghostPinky.getGhostRow() - 1, ghostPinky.getGhostColumn()));
-				if (prand == 1)//down
-					ghostPinky.moveGhost('D', maze.getBoard1CellTexture(ghostPinky.getGhostRow() + 1, ghostPinky.getGhostColumn()));
-				if (prand == 2)//right
-					ghostPinky.moveGhost('R', maze.getBoard1CellTexture(ghostPinky.getGhostRow(), ghostPinky.getGhostColumn() + 1));
-				if (prand == 3)//left
-					ghostPinky.moveGhost('L', maze.getBoard1CellTexture(ghostPinky.getGhostRow(), ghostPinky.getGhostColumn() - 1));
-*/
 			}
 			//blinky moves
 			if (ghostBlinky.nofmoves == 0)
@@ -283,9 +237,9 @@ void main()
 				ghostBlinky.moveGhost('U', tile_type::normalBlock);
 
 			}
-			else if(!frenzy)
+			else if (!frenzy)
 			{
-				
+
 				playerposition = maze.array[player1.getPlayerRow()][player1.getPlayerColumn()];
 				ghostpsition = maze.array[ghostBlinky.getGhostRow()][ghostBlinky.getGhostColumn()];
 
@@ -323,22 +277,6 @@ void main()
 
 					}
 				}
-						
-
-
-
-
-
-				/* prand = rand() % 4;
-				if (prand == 0)//up
-					ghostBlinky.moveGhost('U', maze.getBoard1CellTexture(ghostBlinky.getGhostRow() - 1, ghostBlinky.getGhostColumn()));
-				if (prand == 1)//down
-					ghostBlinky.moveGhost('D', maze.getBoard1CellTexture(ghostBlinky.getGhostRow() + 1, ghostBlinky.getGhostColumn()));
-				if (prand == 2)//right
-					ghostBlinky.moveGhost('R', maze.getBoard1CellTexture(ghostBlinky.getGhostRow(), ghostBlinky.getGhostColumn() + 1));
-				if (prand == 3)//left
-					ghostBlinky.moveGhost('L', maze.getBoard1CellTexture(ghostBlinky.getGhostRow(), ghostBlinky.getGhostColumn() - 1));
-*/
 			}
 			//inky moves
 			if (ghostInky.nofmoves == 0)
@@ -354,7 +292,7 @@ void main()
 			{
 				ghostInky.moveGhost('U', tile_type::normalBlock);
 			}
-			else if(!frenzy)
+			else if (!frenzy)
 			{
 				playerposition = maze.array[player1.getPlayerRow()][player1.getPlayerColumn()];
 				ghostpsition = maze.array[ghostInky.getGhostRow()][ghostInky.getGhostColumn()];
@@ -393,16 +331,6 @@ void main()
 
 					}
 				}
-				/*int prand = rand() % 4;
-				if (prand == 0)//up
-					ghostInky.moveGhost('U', maze.getBoard1CellTexture(ghostInky.getGhostRow() - 1, ghostInky.getGhostColumn()));
-				if (prand == 1)//down
-					ghostInky.moveGhost('D', maze.getBoard1CellTexture(ghostInky.getGhostRow() + 1, ghostInky.getGhostColumn()));
-				if (prand == 2)//right
-					ghostInky.moveGhost('R', maze.getBoard1CellTexture(ghostInky.getGhostRow(), ghostInky.getGhostColumn() + 1));
-				if (prand == 3)//left
-					ghostInky.moveGhost('L', maze.getBoard1CellTexture(ghostInky.getGhostRow(), ghostInky.getGhostColumn() - 1));
-					*/
 			}
 			//clyde moves
 			if (ghostClyde.nofmoves == 0)
@@ -418,7 +346,7 @@ void main()
 			{
 				ghostClyde.moveGhost('U', tile_type::normalBlock);
 			}
-			else if(!frenzy)
+			else if (!frenzy)
 			{
 
 				playerposition = maze.array[player1.getPlayerRow()][player1.getPlayerColumn()];
@@ -458,18 +386,8 @@ void main()
 
 					}
 				}
-				/*int prand = rand() % 4;
-				if (prand == 0)//up
-					ghostClyde.moveGhost('U', maze.getBoard1CellTexture(ghostClyde.getGhostRow() - 1, ghostClyde.getGhostColumn()));
-				if (prand == 1)//down
-					ghostClyde.moveGhost('D', maze.getBoard1CellTexture(ghostClyde.getGhostRow() + 1, ghostClyde.getGhostColumn()));
-				if (prand == 2)//right
-					ghostClyde.moveGhost('R', maze.getBoard1CellTexture(ghostClyde.getGhostRow(), ghostClyde.getGhostColumn() + 1));
-				if (prand == 3)//left
-					ghostClyde.moveGhost('L', maze.getBoard1CellTexture(ghostClyde.getGhostRow(), ghostClyde.getGhostColumn() - 1));
-*/
 			}
-		
+
 			if (player1.getScore() >= 200 && !ghostInky.canstart)
 			{
 				ghostInky.canstart = true;
@@ -477,10 +395,7 @@ void main()
 			}
 			if ((clydeclk.getElapsedTime().asMilliseconds() >= 3000) && (ghostInky.canstart))
 				ghostClyde.canstart = true;
-		
-
-			
-			if (!frenzy) 
+			if (!frenzy)
 			{
 				if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()) ||
 					(ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()) ||
@@ -491,41 +406,37 @@ void main()
 					player1.reduceLife();
 				}
 			}
-
+			if ((maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == fruits))
+			{
+				maze.textureAfterPalyerMoves(player1.getPlayerRow(), player1.getPlayerColumn());
+				player1.addLife();
+			}
 			if ((maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == pallett))
 
 			{
 				maze.textureAfterPalyerMoves(player1.getPlayerRow(), player1.getPlayerColumn());
 				player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
-			
 			}
-
 			if (maze.getBoard1CellTexture(player1.getPlayerRow(), player1.getPlayerColumn()) == powerpall)
 			{
-				
-					maze.textureAfterPalyerMoves(player1.getPlayerRow(), player1.getPlayerColumn());
-					player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
-					
+				maze.textureAfterPalyerMoves(player1.getPlayerRow(), player1.getPlayerColumn());
+				player1.addNumberofPoints(maze.array, maze.arrayOfEmptyPlaces);
+
 				Fmode.restart();
 				if (!frenzy)
 				{
-					ghostBlinky.SetcolorBlueFrenzy("Frenzy.jpg");
-					ghostPinky.SetcolorBlueFrenzy("Frenzy.jpg");
-					ghostInky.SetcolorBlueFrenzy("Frenzy.jpg");
-					ghostClyde.SetcolorBlueFrenzy("Frenzy.jpg");
-
-
-
-
+					ghostBlinky.SetcolorBlueFrenzy("Frenzy.png");
+					ghostPinky.SetcolorBlueFrenzy("Frenzy.png");
+					ghostInky.SetcolorBlueFrenzy("Frenzy.png");
+					ghostClyde.SetcolorBlueFrenzy("Frenzy.png");
 					//playerposition = maze.array[player1.getPlayerRow()][player1.getPlayerColumn()];
 					ghostpsition = maze.array[ghostPinky.getGhostRow()][ghostPinky.getGhostColumn()];
 
 					paths = Dijkstra(Graph, maze.array[ghostPinky.getGhostRow()][ghostPinky.getGhostColumn()]);
 					paths[85].pop_back();
 					//for (int i = 0; i < paths[playerposition].size(); i++)
-					while (!paths[85].empty()  )// for pinky 
+					while (!paths[85].empty())// for pinky 
 					{
-						
 						int temp = paths[85].back();
 						paths[85].pop_back();
 						if (maze.array[ghostPinky.getGhostRow() - 1][ghostPinky.getGhostColumn()] == temp)
@@ -548,17 +459,8 @@ void main()
 							cout << "in right frenzy";
 							ghostPinky.moveghostNotrandom('R', tile_type::normalBlock);
 						}
-
-					
-						//testtimer.restart();
-						//while (testtimer.getElapsedTime().asMilliseconds() < 400)
-						//{
-
-						//}
-
 					}
 					// for blinky 
-
 					//playerposition = maze.array[player1.getPlayerRow()][player1.getPlayerColumn()];
 					ghostpsition = maze.array[ghostBlinky.getGhostRow()][ghostBlinky.getGhostColumn()];
 
@@ -593,12 +495,9 @@ void main()
 						//testtimer.restart();
 						while (testtimer.getElapsedTime().asMilliseconds() < 400)
 						{
-
 						}
 					}
-
 					// for clyde 
-
 					ghostpsition = maze.array[ghostClyde.getGhostRow()][ghostClyde.getGhostColumn()];
 
 					paths = Dijkstra(Graph, maze.array[ghostClyde.getGhostRow()][ghostClyde.getGhostColumn()]);
@@ -637,12 +536,11 @@ void main()
 					}
 
 					// for inky 
-					ghostpsition = maze.array[ghostClyde.getGhostRow()][ghostClyde.getGhostColumn()];
-
-					paths = Dijkstra(Graph, maze.array[ghostClyde.getGhostRow()][ghostClyde.getGhostColumn()]);
+					ghostpsition = maze.array[ghostInky.getGhostRow()][ghostInky.getGhostColumn()];
+					paths = Dijkstra(Graph, maze.array[ghostInky.getGhostRow()][ghostInky.getGhostColumn()]);
 					paths[84].pop_back();
-					
-					while (!paths[84].empty() && testtimer.getElapsedTime().asMilliseconds() < 400)
+
+					while (!paths[84].empty())
 					{
 						testtimer.restart();
 						int temp = paths[84].back();
@@ -670,108 +568,53 @@ void main()
 						//testtimer.restart();
 						//while (testtimer.getElapsedTime().asMilliseconds() < 400)
 						//{
-
 						//}
 					}
-
-
-
-
-
-					// stop
-
 				}
 				frenzy = true;
-
-
-				
-
-
-
-
+				if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()))
+				{
+					ghostBlinky.frenzymodeResetPos(8, 9);
+				}
+				if ((ghostInky.getGhostRow() == player1.getPlayerRow()) && (ghostInky.getGhostColumn() == player1.getPlayerColumn()))
+				{
+					ghostInky.frenzymodeResetPos(9, 8);
+				}
+				if ((ghostClyde.getGhostRow() == player1.getPlayerRow()) && (ghostClyde.getGhostColumn() == player1.getPlayerColumn()))
+				{
+					ghostClyde.frenzymodeResetPos(9, 10);
+				}
+				if ((ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()))
+				{
+					ghostPinky.frenzymodeResetPos(9, 9);
+				}
 			}
-
-
-			//tesr
-			if ((ghostBlinky.getGhostRow() == player1.getPlayerRow()) && (ghostBlinky.getGhostColumn() == player1.getPlayerColumn()))
-			{
-				ghostBlinky.frenzymodeResetPos(8, 9);
-
-			}
-
-			if ((ghostInky.getGhostRow() == player1.getPlayerRow()) && (ghostInky.getGhostColumn() == player1.getPlayerColumn()))
-			{
-				ghostInky.frenzymodeResetPos(9, 8);
-
-			}
-
-			if ((ghostClyde.getGhostRow() == player1.getPlayerRow()) && (ghostClyde.getGhostColumn() == player1.getPlayerColumn()))
-			{
-				ghostClyde.frenzymodeResetPos(9, 10);
-
-			}
-			if ((ghostPinky.getGhostRow() == player1.getPlayerRow()) && (ghostPinky.getGhostColumn() == player1.getPlayerColumn()))
-			{
-				ghostPinky.frenzymodeResetPos(9, 9);
-
-			}
-
 			if (Fmode.getElapsedTime().asSeconds() > 10)
 			{
 				frenzy = false;
 				ghostBlinky.SetColorAFTERfrenzy("Blinky", "Blinky.png");
 				ghostClyde.SetColorAFTERfrenzy("Clyde", "Clyde.png");
-				ghostInky.SetColorAFTERfrenzy("Inky", "Inky.jpg");
+				ghostInky.SetColorAFTERfrenzy("Inky", "Inky.png");
 				ghostPinky.SetColorAFTERfrenzy("Pinky", "Pinky.png");
 			}
 		}// start function end
 		window.clear();
 		maze.drawBoardonWindow(window);
 		player1.drawPlayerOnWindow(window);
+		window.draw(end);
+		window.draw(score);
+		window.draw(lives);
 		ghostBlinky.drawGhostonWindow(window);
 		ghostPinky.drawGhostonWindow(window);
 		ghostInky.drawGhostonWindow(window);
 		ghostClyde.drawGhostonWindow(window);
-		window.draw(end);
-		window.draw(score);
-		window.draw(lives);
 		window.display();
-		slow.restart();
-		while (slow.getElapsedTime().asMilliseconds() < 150)
+		slowPacman.restart();
+		while (slowPacman.getElapsedTime().asMilliseconds() < 150)
 		{
-			if (window.pollEvent(e))
-			{
-				if (e.type == Event::Closed)
-					window.close();
-				else if (e.type == Event::KeyPressed)
-				{
-					switch (e.key.code)
-					{
-					case Keyboard::Up:
-						direction = 'U';
-						break;
-					case Keyboard::Down:
-						direction = 'D';
-						break;
-					case Keyboard::Right:
-						direction = 'R';
-						break;
-					case Keyboard::Left:
-						direction = 'L';
-						break;
-					}//move(0,1)
-
-
-				}
-			}
-
 		}
 	}
 }
-
-
-
-
 vector<vector<int>> Dijkstra(int Graph[COUNT][COUNT], int startNode)
 {
 	int temp[COUNT][COUNT], costs[COUNT], previous[COUNT];
