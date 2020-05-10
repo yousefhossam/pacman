@@ -5,9 +5,10 @@
 using namespace std;
 using namespace sf;
 
-enum tile_type { pallett, powerpall, normalBlock, block };
+enum tile_type { pallett, powerpall, normalBlock, block ,fruits};
 
-struct tile {
+struct tile
+{
 	tile_type type;
 	RectangleShape Tshape;
 };
@@ -23,12 +24,13 @@ private:
 	Texture normalBlocks;//normal black empty place
 	Texture powerPallet;
 	Texture normalPallet;
+	Texture fruit;
 	//Texture ghosthouse;
 public:
 	tile board1[21][19];
 	int array[21][19];
 	int arrayOfEmptyPlaces[10]; //reads places that dont have a coin 
-	board(string normalpic, string blockpic, string palletpic, string powerepalletpic);
+	board(string normalpic, string blockpic, string palletpic, string powerepalletpic,string fruitpic);
 	tile_type getBoard1CellTexture(int roww, int coll);
 	void readArrayFromFile(string filename);
 	void setBoardTextures();// set textures after filling array[][] by reading from file//Will be called from main as soon as board is created
@@ -38,7 +40,7 @@ public:
 
 };
 
-board::board(string normalpic, string blockpic, string palletpic, string powerepalletpic)
+board::board(string normalpic, string blockpic, string palletpic, string powerepalletpic, string fruitpic)
 {
 	for (int i = 0; i < 21; i++)
 		for (int j = 0; j < 19; j++)
@@ -50,14 +52,12 @@ board::board(string normalpic, string blockpic, string palletpic, string powerep
 	normalBlocks.loadFromFile(normalpic);
 	powerPallet.loadFromFile(powerepalletpic);
 	normalPallet.loadFromFile(palletpic);
-
+	fruit.loadFromFile(fruitpic);
 	for (int i = 0; i < 21; i++)
 		for (int j = 0; j < 19; j++)
 			array[i][j] = 0;
-
 	for (int i = 0; i < 10; i++)
 		arrayOfEmptyPlaces[i] = 0;
-
 }
 void board::readArrayFromFile(string filename)
 {
@@ -100,14 +100,31 @@ void board::setBoardTextures() // this sets textures to every block you stillnee
 				board1[i][j].Tshape.setTexture(&normalPallet);
 				board1[i][j].type = pallett;
 			}
+			else if ((array[i][j] != 15) && (array[i][j] != 102) && (array[i][j] != 173) && (array[i][j] != 189) && (array[i][j] != 0))
+			{
+				board1[i][j].Tshape.setTexture(&normalPallet);
+				board1[i][j].type = pallett;
+			}
+			else if ((array[i][j] != 140) && (array[i][j] != 30))
+			{
+				board1[i][j].Tshape.setTexture(&fruit);
+				board1[i][j].type = fruits;
+			}
 		}
 	for (int i = 0; i < 21; i++)
 		for (int j = 0; j < 19; j++)
+		{
 			if ((array[i][j] == 15) || (array[i][j] == 102) || (array[i][j] == 173) || (array[i][j] == 189))
 			{
 				board1[i][j].Tshape.setTexture(&powerPallet);
 				board1[i][j].type = powerpall;
 			}
+			if ((array[i][j] == 140) || (array[i][j] == 30))
+			{
+				board1[i][j].Tshape.setTexture(&fruit);
+				board1[i][j].type = fruits;
+			}
+		}
 }
 tile_type board::getBoard1CellTexture(int roww, int coll)
 {
